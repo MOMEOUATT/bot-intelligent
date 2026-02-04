@@ -1,0 +1,6 @@
+# Configuration locale - EXEMPLE
+# Copiez ce fichier en application-local.properties et remplissez vos valeurs
+spring.datasource.url=jdbc:postgresql://localhost:5432/bot_intelligent
+spring.datasource.username=VOTRE_USERNAME
+spring.datasource.password=VOTRE_PASSWORD
+spring.datasource.driver-class-name=org.postgresql.Driver
