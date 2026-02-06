@@ -1,4 +1,4 @@
-package com.BotIntelligent.backend.repository;
+package com.BotIntelligent.backend.repositories;
 
 import com.BotIntelligent.backend.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;

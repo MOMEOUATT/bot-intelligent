@@ -3,15 +3,17 @@ package com.BotIntelligent.backend.service;
 
 import com.BotIntelligent.backend.entities.Conversation;
 import com.BotIntelligent.backend.entities.Message;
-import com.BotIntelligent.backend.repository.ConversationRepository;
-import com.BotIntelligent.backend.repository.MessageRepository;
-import com.BotIntelligent.backend.repository.UserRepository;
+import com.BotIntelligent.backend.repositories.ConversationRepository;
+import com.BotIntelligent.backend.repositories.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class MessageService {
 
     @Autowired
@@ -24,6 +26,7 @@ public class MessageService {
     private ConversationService conversationService;
 
     @Autowired
+//    @Lazy
     private BotService botService;
 
     public Message sendUserMessage(Long conversationId, String content){
@@ -74,7 +77,7 @@ public class MessageService {
         messageRepository.deleteById(id);
     }
 
-    public long countConversationMessage(Long conversationId){
+    public long countConversationMessages(Long conversationId){
         return messageRepository.countByConversationId(conversationId);
     }
 

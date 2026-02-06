@@ -2,9 +2,8 @@ package com.BotIntelligent.backend.service;
 
 import com.BotIntelligent.backend.entities.Conversation;
 import com.BotIntelligent.backend.entities.User;
-import com.BotIntelligent.backend.repository.ConversationRepository;
-import com.BotIntelligent.backend.repository.UserRepository;
-import lombok.Setter;
+import com.BotIntelligent.backend.repositories.ConversationRepository;
+import com.BotIntelligent.backend.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
