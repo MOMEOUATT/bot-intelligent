@@ -1,89 +1,236 @@
 package com.BotIntelligent.backend.service;
 
+import com.BotIntelligent.backend.entities.Message;
+import com.BotIntelligent.backend.repositories.MessageRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class BotService {
 
-    private final Map<String, String> knowledgeBase = new HashMap<>();
+    @Autowired
+    private MessageRepository messageRepository;
 
-    public BotService(){
+    @Autowired
+    private SynonymService synonymService;
+
+    @Autowired
+    private KnowledgeBaseService knowledgeBaseService;
+
+    private final Map<String, List<String>> knowledgeBase;
+    private final Random random;
+
+    public BotService() {
+        this.knowledgeBase = new HashMap<>();
+        this.random = new Random();
         initializeKnowledgeBase();
     }
 
-    private void initializeKnowledgeBase(){
-        // Salutations
-        knowledgeBase.put("bonjour", "Bonjour ! Je suis votre assistant intelligent. Comment puis-je vous aider aujourd'hui ?");
-        knowledgeBase.put("salut", "Salut ! Ravi de vous revoir. Que puis-je faire pour vous ?");
-        knowledgeBase.put("hello", "Hello ! Comment puis-je vous assister ?");
-        knowledgeBase.put("bonsoir", "Bonsoir ! Comment allez-vous ?");
-
-        // Sommeil
-        knowledgeBase.put("sommeil", "Pour améliorer votre sommeil, voici quelques conseils :\n" +
-                "- Couchez-vous à heures régulières\n" +
-                "- Évitez les écrans 1h avant de dormir\n" +
-                "- Créez un environnement calme et sombre\n" +
-                "- Évitez la caféine après 16h");
-
-        knowledgeBase.put("dormir", "Avez-vous des difficultés à dormir ? Je peux vous donner des conseils pour mieux dormir.");
-        knowledgeBase.put("insomnie", "L'insomnie peut avoir plusieurs causes. Essayez de maintenir une routine régulière et consultez un professionnel si ça persiste.");
-
-        // Sport & Exercice
-        knowledgeBase.put("sport", "L'activité physique est excellente pour la santé ! Je recommande :\n" +
-                "- 30 minutes d'activité modérée par jour\n" +
-                "- Marche, course, vélo, natation\n" +
-                "- Commencez progressivement si vous débutez");
-
-        knowledgeBase.put("exercice", "Quel type d'exercice vous intéresse ? Cardio, musculation, yoga ?");
-        knowledgeBase.put("fitness", "Le fitness combine cardio et renforcement musculaire. Parfait pour la santé globale !");
-
-        // Nutrition
-        knowledgeBase.put("alimentation", "Une alimentation équilibrée comprend :\n" +
-                "- Fruits et légumes variés\n" +
-                "- Protéines (viande, poisson, légumineuses)\n" +
-                "- Féculents complets\n" +
-                "- Bonne hydratation (1.5-2L d'eau/jour)");
-
-        knowledgeBase.put("nutrition", "La nutrition est la base de la santé. Que souhaitez-vous savoir ?");
-        knowledgeBase.put("régime", "Je vous conseille d'adopter une alimentation équilibrée plutôt qu'un régime strict. Consultez un nutritionniste pour un plan personnalisé.");
-
-        // Stress & Bien-être
-        knowledgeBase.put("stress", "Pour gérer le stress :\n" +
-                "- Pratiquez la respiration profonde\n" +
-                "- Faites des pauses régulières\n" +
-                "- Essayez la méditation ou le yoga\n" +
-                "- Parlez-en à quelqu'un de confiance");
-
-        knowledgeBase.put("anxiété", "L'anxiété est normale, mais si elle persiste, consultez un professionnel. En attendant, essayez des exercices de relaxation.");
-        knowledgeBase.put("méditation", "La méditation aide à calmer l'esprit. Commencez par 5 minutes par jour et augmentez progressivement.");
-
-        // Au revoir
-        knowledgeBase.put("merci", "Avec plaisir ! N'hésitez pas si vous avez d'autres questions.");
-        knowledgeBase.put("au revoir", "Au revoir ! À bientôt et prenez soin de vous !");
-        knowledgeBase.put("bye", "À bientôt ! Restez en bonne santé !");
+    private void initializeKnowledgeBase() {
+        // Mots-clés principaux (gardez ceux existants)
+        knowledgeBase.put("salutations", Arrays.asList("bonjour", "salut", "hello", "hey", "coucou", "bonsoir", "hi"));
+        knowledgeBase.put("aurevoir", Arrays.asList("au revoir", "bye", "à bientôt", "salut", "ciao", "tchao"));
+        knowledgeBase.put("remerciements", Arrays.asList("merci", "thanks", "merci beaucoup", "super", "génial"));
+        knowledgeBase.put("comment_ca_va", Arrays.asList("comment ça va", "ça va", "tu vas bien", "quoi de neuf"));
+        knowledgeBase.put("sommeil", Arrays.asList("sommeil", "dormir", "insomnie", "fatigue", "repos", "nuit"));
+        knowledgeBase.put("sport", Arrays.asList("sport", "exercice", "fitness", "gym", "musculation", "cardio"));
+        knowledgeBase.put("nutrition", Arrays.asList("nutrition", "alimentation", "manger", "nourriture", "régime"));
+        knowledgeBase.put("stress", Arrays.asList("stress", "anxiété", "anxieux", "angoisse", "nerveux"));
+        knowledgeBase.put("motivation", Arrays.asList("motivation", "motivé", "démotivé", "courage", "objectif"));
+        knowledgeBase.put("sante_mentale", Arrays.asList("dépression", "déprimé", "triste", "moral", "psychologie"));
+        knowledgeBase.put("productivite", Arrays.asList("productivité", "productif", "travail", "concentration"));
+        knowledgeBase.put("meditation", Arrays.asList("méditation", "méditer", "relaxation", "détente", "calme"));
     }
 
-    public String generateResponse(String userMessage){
-        if(userMessage == null || userMessage.trim().isEmpty()){
-            return "Je n'ai pas compris votre message. Pouvez-vous reformuler ?";
+    /**
+     * Génère une réponse intelligente avec analyse sémantique
+     */
+    public String generateResponseWithContext(String userMessage, Long conversationId) {
+        // 1. Normaliser le message (remplacer synonymes)
+        String normalizedMessage = synonymService.normalizeText(userMessage);
+
+        // 2. Analyser le sentiment
+        SynonymService.Sentiment sentiment = synonymService.analyzeSentiment(userMessage);
+
+        // 3. Récupérer le contexte
+        String context = getConversationContext(conversationId, 5);
+        String detectedTopic = detectTopicFromContext(context);
+
+        // 4. Vérifier si c'est une suite de conversation
+        if (detectedTopic != null && isFollowUpMessage(normalizedMessage)) {
+            return getContinuationResponse(detectedTopic, normalizedMessage, sentiment);
         }
 
-        String messageLower = userMessage.toLowerCase().trim();
-
-        for (Map.Entry<String, String> entry : knowledgeBase.entrySet()) {
-            if (messageLower.contains(entry.getKey())) {
-                return entry.getValue();
+        // 5. Chercher dans la FAQ enrichie d'abord
+        String category = detectCategory(normalizedMessage);
+        if (category != null) {
+            String faqResponse = knowledgeBaseService.searchFAQ(category, normalizedMessage);
+            if (faqResponse != null) {
+                return faqResponse;
             }
         }
 
-        return "Je ne suis pas sûr de bien comprendre. Pouvez-vous être plus précis ? " +
-                "Je peux vous aider sur des sujets comme le sommeil, le sport, la nutrition ou la gestion du stress.";
+        // 6. Réponse basée sur la catégorie détectée
+        if (category != null) {
+            return getCategoryResponse(category, sentiment);
+        }
+
+        // 7. Réponse par défaut adaptée au sentiment
+        return getDefaultResponse(sentiment);
     }
 
-    public void addKnowledge(String keyword, String Response){
-        knowledgeBase.put(keyword.toLowerCase(), Response);
+    /**
+     * Détecte la catégorie du message
+     */
+    private String detectCategory(String message) {
+        String messageLower = message.toLowerCase();
+
+        for (Map.Entry<String, List<String>> entry : knowledgeBase.entrySet()) {
+            String category = entry.getKey();
+            List<String> keywords = entry.getValue();
+
+            for (String keyword : keywords) {
+                if (messageLower.contains(keyword)) {
+                    return category;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Génère une réponse adaptée au sentiment
+     */
+    private String getCategoryResponse(String category, SynonymService.Sentiment sentiment) {
+        List<String> responses = new ArrayList<>();
+
+        switch (category) {
+            case "salutations":
+                if (sentiment == SynonymService.Sentiment.POSITIF) {
+                    responses.add("Bonjour ! 😊 Vous semblez en forme ! Comment puis-je vous aider ?");
+                } else {
+                    responses.add("Bonjour ! 👋 Je suis là pour vous écouter. Comment allez-vous ?");
+                }
+                break;
+
+            case "stress":
+                if (sentiment == SynonymService.Sentiment.NEGATIF) {
+                    responses.add("Je sens que vous êtes stressé. 🫂 Prenez une grande respiration. Voulez-vous qu'on parle de techniques de relaxation ?");
+                    responses.add("Le stress peut être écrasant. 💙 N'hésitez pas à en parler à quelqu'un de confiance ou à consulter un professionnel si ça devient trop lourd.");
+                } else {
+                    responses.add("Gérer son stress, c'est important ! 🧘 La respiration profonde, l'exercice et la méditation sont très efficaces.");
+                }
+                break;
+
+            case "sommeil":
+                responses.add("Le sommeil est la base ! 😴 Routine fixe, chambre fraîche (18-20°C), pas d'écrans 1h avant. Combien d'heures dormez-vous en moyenne ?");
+                break;
+
+            case "sport":
+                if (sentiment == SynonymService.Sentiment.POSITIF) {
+                    responses.add("Super motivation ! 💪 L'important est la régularité. Quel type d'activité vous attire ?");
+                } else {
+                    responses.add("Je comprends que ce soit difficile de commencer. 🚶 Que diriez-vous de simplement 10 minutes de marche par jour pour débuter ?");
+                }
+                break;
+
+            case "motivation":
+                if (sentiment == SynonymService.Sentiment.NEGATIF) {
+                    responses.add("Le manque de motivation arrive à tout le monde. 🌟 " + knowledgeBaseService.getRandomQuote());
+                } else {
+                    responses.add("Excellent état d'esprit ! 🚀 " + knowledgeBaseService.getRandomQuote());
+                }
+                break;
+
+            case "sante_mentale":
+                responses.add("Votre santé mentale est aussi importante que votre santé physique. 💚 N'hésitez jamais à consulter un professionnel si vous en ressentez le besoin.");
+                break;
+
+            default:
+                responses.add("Intéressant ! Pouvez-vous m'en dire un peu plus pour que je puisse mieux vous aider ?");
+        }
+
+        if (responses.isEmpty()) {
+            return getDefaultResponse(sentiment);
+        }
+
+        return responses.get(random.nextInt(responses.size()));
+    }
+
+    private String getDefaultResponse(SynonymService.Sentiment sentiment) {
+        if (sentiment == SynonymService.Sentiment.NEGATIF) {
+            return "Je sens que quelque chose vous préoccupe. 💙 Je suis là pour parler de sommeil, sport, nutrition, stress, motivation... Qu'est-ce qui vous tracasse ?";
+        } else if (sentiment == SynonymService.Sentiment.POSITIF) {
+            return "Content de discuter avec vous ! 😊 Je peux vous aider sur le sommeil, sport, nutrition, bien-être... Que souhaitez-vous savoir ?";
+        } else {
+            return "Je peux vous conseiller sur le sommeil, sport, nutrition, stress, motivation... De quoi souhaitez-vous parler ? 🤔";
+        }
+    }
+
+    // Méthodes existantes (gardez-les)
+    private String detectTopicFromContext(String context) {
+        if (context == null || context.isEmpty()) return null;
+
+        String contextLower = context.toLowerCase();
+        Map<String, Integer> topicScores = new HashMap<>();
+
+        for (Map.Entry<String, List<String>> entry : knowledgeBase.entrySet()) {
+            int score = 0;
+            for (String keyword : entry.getValue()) {
+                if (contextLower.contains(keyword)) score++;
+            }
+            if (score > 0) topicScores.put(entry.getKey(), score);
+        }
+
+        return topicScores.entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .orElse(null);
+    }
+
+    private boolean isFollowUpMessage(String message) {
+        List<String> followUpPhrases = Arrays.asList(
+                "ça marche pas", "pas vraiment", "autre chose", "et si", "mais",
+                "plutôt", "sinon", "encore", "plus", "non", "oui mais"
+        );
+
+        for (String phrase : followUpPhrases) {
+            if (message.contains(phrase)) return true;
+        }
+        return false;
+    }
+
+    private String getContinuationResponse(String topic, String message, SynonymService.Sentiment sentiment) {
+        switch (topic) {
+            case "stress":
+                return "Je comprends. 💙 Peut-être essayer des techniques différentes ? Méditation guidée (apps : Petit Bambou, Calm), ou simplement parler à quelqu'un ?";
+            case "sommeil":
+                return "Les problèmes de sommeil sont tenaces. 😴 Avez-vous essayé de tenir un journal du sommeil ? Noter l'heure du coucher/réveil peut révéler des patterns.";
+            case "sport":
+                return "Peut-être qu'un autre type d'activité vous conviendrait ? Yoga, natation, ou même juste de la marche. L'important : trouver ce que vous aimez ! 🚶";
+            default:
+                return "Je vois. Voulez-vous qu'on explore une autre piste ou préférez-vous parler d'autre chose ? 😊";
+        }
+    }
+
+    private String getConversationContext(Long conversationId, int numberOfMessages) {
+        if (conversationId == null) return "";
+
+        List<Message> recentMessages = messageRepository.findByConversationIdOrderByCreatedAtAsc(conversationId);
+        if (recentMessages.isEmpty()) return "";
+
+        int startIndex = Math.max(0, recentMessages.size() - numberOfMessages);
+        List<Message> contextMessages = recentMessages.subList(startIndex, recentMessages.size());
+
+        StringBuilder context = new StringBuilder();
+        for (Message msg : contextMessages) {
+            String role = msg.getIsBot() ? "Bot" : "User";
+            context.append(role).append(": ").append(msg.getContent()).append("\n");
+        }
+
+        return context.toString();
     }
 }

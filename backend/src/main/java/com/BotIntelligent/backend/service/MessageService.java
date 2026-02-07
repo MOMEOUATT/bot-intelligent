@@ -1,12 +1,10 @@
 package com.BotIntelligent.backend.service;
 
-
 import com.BotIntelligent.backend.entities.Conversation;
 import com.BotIntelligent.backend.entities.Message;
 import com.BotIntelligent.backend.repositories.ConversationRepository;
 import com.BotIntelligent.backend.repositories.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -26,7 +24,6 @@ public class MessageService {
     private ConversationService conversationService;
 
     @Autowired
-//    @Lazy
     private BotService botService;
 
     public Message sendUserMessage(Long conversationId, String content){
@@ -50,7 +47,8 @@ public class MessageService {
         Conversation conversation = conversationRepository.findById(conversationId)
                 .orElseThrow(() -> new RuntimeException("Conversation non trouvée"));
 
-        String botResponse = botService.generateResponse(content);
+        // ✅ Utiliser la méthode avec contexte
+        String botResponse = botService.generateResponseWithContext(content, conversationId);
 
         Message botMessage = new Message();
         botMessage.setConversation(conversation);
