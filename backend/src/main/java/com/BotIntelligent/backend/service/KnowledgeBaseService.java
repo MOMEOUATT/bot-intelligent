@@ -115,6 +115,60 @@ public class KnowledgeBaseService {
                 "Améliorer la concentration : éliminez les distractions (téléphone en mode avion), travaillez en blocs de temps, une tâche à la fois, faites des vraies pauses, dormez suffisamment. 🎯"
         );
 
+        // ========== PROGRAMMATION (NOUVEAU) ==========
+        addFAQ("programmation",
+                "apprendre programmer",
+                "Pour apprendre : choisissez un langage (Python pour débuter), suivez un cours (FreeCodeCamp, OpenClassrooms), pratiquez avec projets ! 💻"
+        );
+        addFAQ("programmation",
+                "meilleur langage",
+                "Pas de 'meilleur' ! Python = polyvalent, JavaScript = web, Java = entreprise, C++ = performances. Selon votre projet ! 🚀"
+        );
+
+        // ========== CARRIÈRE (NOUVEAU) ==========
+        addFAQ("carriere",
+                "premier emploi",
+                "1er emploi : CV solide + projets perso, LinkedIn actif, candidatures ciblées, réseau (meetups). Persévérez ! 💼"
+        );
+        addFAQ("cv",
+                "bon cv",
+                "CV efficace : 1-2 pages, résultats quantifiés, mots-clés du poste, projets concrets, zéro faute ! 📄"
+        );
+        addFAQ("entretien",
+                "questions entretien",
+                "Questions fréquentes : Présentez-vous, Qualités/défauts, Pourquoi ce poste, Projet marquant. Préparez avec exemples ! 🎯"
+        );
+
+        // ========== FINANCES (NOUVEAU) ==========
+        addFAQ("budget",
+                "économiser argent",
+                "Épargne : suivez dépenses, règle 50/30/20, automatisez virements, évitez achats impulsifs (24h réflexion). 💰"
+        );
+        addFAQ("investissement",
+                "commencer investir",
+                "Investissement : 1) Formez-vous, 2) Fonds d'urgence, 3) ETF diversifiés, 4) Horizon long terme. 📈"
+        );
+
+        // ========== ÉTUDES (NOUVEAU) ==========
+        addFAQ("etudes",
+                "mieux étudier",
+                "Études efficaces : Pomodoro, résumés manuscrits, enseignez à quelqu'un, testez-vous, espacez révisions. 📚"
+        );
+        addFAQ("examens",
+                "stress examens",
+                "Anti-stress : préparation régulière, sommeil suffisant, respiration, arrivez en avance. Vous êtes prêt ! 💪"
+        );
+
+        // ========== TECHNOLOGIE (NOUVEAU) ==========
+        addFAQ("web",
+                "développeur web",
+                "Dev web : 1) HTML/CSS/JS, 2) Framework (React/Angular), 3) Backend (Node/Java), 4) BDD, 5) Git. Projets +++  🌐"
+        );
+        addFAQ("intelligence_artificielle",
+                "apprendre ia",
+                "IA/ML : 1) Maths (stats), 2) Python, 3) Bibliothèques (NumPy, Pandas), 4) Cours Coursera, 5) Projets Kaggle. 🤖"
+        );
+
         // Citations motivantes
         addMotivationalQuotes();
     }

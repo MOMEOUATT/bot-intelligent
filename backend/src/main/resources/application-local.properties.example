@@ -4,3 +4,14 @@ spring.datasource.url=jdbc:postgresql://localhost:5432/bot_intelligent
 spring.datasource.username=VOTRE_USERNAME
 spring.datasource.password=VOTRE_PASSWORD
 spring.datasource.driver-class-name=org.postgresql.Driver
+
+# ========================================
+# Configuration OpenAI API - EXEMPLE
+# ========================================
+openai.api.enabled=true
+
+# Mode DÉMO activé (réponses simulées, gratuit)
+openai.api.demo-mode=true
+
+openai.api.key=votre_clé_api
+openai.api.model=gpt-4o-mini
