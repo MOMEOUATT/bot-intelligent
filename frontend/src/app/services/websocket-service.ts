@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {Client, IMessage} from '@stomp/stompjs'
-import { BehaviorSubject, Observable } from 'rxjs';
-import { Message } from '../components/message/message';
+import { BehaviorSubject, filter, Observable } from 'rxjs';
+import { Message } from '../models/message'; 
 import SockJS from 'sockjs-client';
 
 @Injectable({
@@ -11,7 +11,7 @@ export class WebsocketService {
 
   private stompClient: Client | null = null;
   private messageSubject = new BehaviorSubject<Message | null>(null);
-  private message$: Observable<Message | null> = this.messageSubject.asObservable();
+  public messages$: Observable<Message | null> = this.messageSubject.asObservable();
 
   private connected = false;
 
@@ -83,6 +83,12 @@ export class WebsocketService {
     });
 
     console.log("Message envoyé vers WebSocket");
+  }
+
+  onMessage(): Observable<Message> {
+    return this.messages$.pipe(
+      filter(msg => msg !== null)
+    ) as Observable<Message>;
   }
 
 

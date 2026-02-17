@@ -60,9 +60,9 @@ export class Auth implements OnInit {
       password: ["", [Validators.required, Validators.minLength(6)]]
     });
 
-    if(this.authService.isLoggedIn()){
-      this.router.navigate(["/chat"]);
-    }
+    // if(this.authService.isLoggedIn()){
+    //   this.router.navigate(["/chat"]);
+    // }
     
   }
 
@@ -84,13 +84,14 @@ export class Auth implements OnInit {
       next: (user: User) => {
 
         this.authService.login(user);
+        console.log(user);
         this.router.navigate(["/chat"]);
         this.loading = false;
       },
 
       error: (error) => {
         console.error("Erreur de connexion: ", error);
-        this.errorMessage = "Eamil ou mot de passe incorrect";
+        this.errorMessage = "Email ou mot de passe incorrect";
         this.loading = false;
       }
     });
@@ -130,6 +131,7 @@ export class Auth implements OnInit {
       }
     });
   }
+
 
   /**
  * Détermine l'état des yeux du bot

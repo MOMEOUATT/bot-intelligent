@@ -3,8 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { User } from '../models/user';
 import { Conversation } from '../models/conversation';
-import { MessageDTO } from '../models/message';
-import { Message } from '../components/message/message';
+import { Message, MessageDTO } from '../models/message';
 
 @Injectable({
   providedIn: 'root',
@@ -31,8 +30,8 @@ export class ApiService {
     return this.http.post<Conversation>(`${this.apiUrl}/conversations`, {userId, title});
   }
 
-  getUserConversation(userId: number): Observable<Conversation>{
-    return this.http.get<Conversation>(`${this.apiUrl}/conversations/user/${userId}`);
+  getUserConversation(userId: number): Observable<Conversation[]>{
+    return this.http.get<Conversation[]>(`${this.apiUrl}/conversations/user/${userId}`);
   }
 
   getConversation(id: number): Observable<Conversation>{
@@ -43,8 +42,11 @@ export class ApiService {
     return this.http.delete<void>(`${this.apiUrl}/conversations/${id}`);
   }
 
-  sendMessage(messageDto: MessageDTO): Observable<Message[]>{
-    return this.http.post<Message[]>(`${this.apiUrl}/messages`, messageDto);
+  sendMessage(conversationId: number, content: string): Observable<Message[]>{
+    return this.http.post<Message[]>(`${this.apiUrl}/messages`, {
+      conversationId,
+      content
+    });
   }
 
   getConversationMessage(conversationId: number): Observable<Message[]>{
@@ -52,7 +54,7 @@ export class ApiService {
   }
 
   searchMessages(conversationId: number, keyword: string): Observable<Message[]>{
-    return this.http.get<Message[]>(`${this.apiUrl}/messages/conversations/${conversationId}/search`, {
+    return this.http.get<Message[]>(`${this.apiUrl}/messages/conversation/${conversationId}/search`, {
       params: {keyword}
     });
   }

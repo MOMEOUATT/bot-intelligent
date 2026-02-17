@@ -1,4 +1,86 @@
-/* You can add global styles to this file, and also import other style files */
+/* ===== IMPORTS ===== */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+/* ===== RESET & BASE ===== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  /* overflow: hidden; */
+  font-family: 'Outfit', sans-serif;
+  background: #0c0e14;
+  color: #f1f5f9;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+app-root {
+  display: block;
+  height: 100%;
+}
+
+/* ===== SCROLLBAR GLOBALE ===== */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.02); }
+::-webkit-scrollbar-thumb {
+  background: rgba(167, 139, 250, 0.25);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(167, 139, 250, 0.45);
+}
+
+/* ===== ANGULAR MATERIAL DARK OVERRIDES ===== */
+.mat-mdc-menu-panel {
+  background: #1a1f2e !important;
+  border: 1px solid rgba(167, 139, 250, 0.15) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+}
+
+.mat-mdc-menu-item {
+  color: #cbd5e1 !important;
+  font-family: 'Outfit', sans-serif !important;
+}
+
+.mat-mdc-menu-item:hover {
+  background: rgba(167, 139, 250, 0.1) !important;
+}
+
+.mat-mdc-menu-item mat-icon {
+  color: #94a3b8 !important;
+}
+
+.mat-divider {
+  border-color: rgba(167, 139, 250, 0.1) !important;
+}
+
+/* Mat Checkbox */
+.mdc-checkbox__background {
+  border-color: rgba(167, 139, 250, 0.4) !important;
+}
+
+/* Mat Spinner */
+.mat-mdc-progress-spinner circle {
+  stroke: #a78bfa !important;
+}
+
+/* Mat Form Field */
+.mat-mdc-form-field-subscript-wrapper {
+  display: none !important;
+}
+
+/* Tooltip */
+.mat-mdc-tooltip {
+  background: rgba(26, 31, 46, 0.95) !important;
+  color: #e2e8f0 !important;
+  font-family: 'Outfit', sans-serif !important;
+  font-size: 12px !important;
+  border: 1px solid rgba(167, 139, 250, 0.2) !important;
+  border-radius: 8px !important;
+}

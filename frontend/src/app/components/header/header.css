@@ -1,0 +1,123 @@
+.header {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  height: 64px;
+  padding: 0 20px;
+  background: rgba(12, 14, 20, 0.95);
+  border-bottom: 1px solid rgba(167, 139, 250, 0.08);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 1px 0 rgba(167, 139, 250, 0.06);
+}
+
+/* ===== GAUCHE ===== */
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.user-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px 6px 6px;
+  border-radius: 100px;
+  border: 1px solid rgba(167, 139, 250, 0.12);
+  background: rgba(167, 139, 250, 0.05);
+  transition: all 0.25s ease;
+  cursor: default;
+}
+
+.user-chip:hover {
+  background: rgba(167, 139, 250, 0.1);
+  border-color: rgba(167, 139, 250, 0.25);
+}
+
+.user-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7c3aed, #a78bfa);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 6px rgba(124, 58, 237, 0.4);
+}
+
+.user-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #cbd5e1;
+  white-space: nowrap;
+}
+
+/* ===== CENTRE ===== */
+.header-center {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-name {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, #a78bfa 0%, #c4b5fd 50%, #a78bfa 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s linear infinite;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+/* ===== DROITE ===== */
+.header-right {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.menu-trigger {
+  color: #64748b !important;
+  transition: color 0.2s ease !important;
+}
+
+.menu-trigger:hover {
+  color: #a78bfa !important;
+}
+
+.menu-user-info {
+  color: #64748b !important;
+  font-size: 13px !important;
+  cursor: default !important;
+  pointer-events: none;
+}
+
+::ng-deep .logout-item {
+  color: #f87171 !important;
+}
+
+::ng-deep .logout-item mat-icon {
+  color: #f87171 !important;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .user-name {
+    display: none;
+  }
+
+  .brand-name {
+    font-size: 18px;
+    letter-spacing: 2px;
+  }
+}

@@ -1,0 +1,252 @@
+.message {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+  animation: slideIn 0.3s ease-out;
+  max-width: 85%;
+
+  &.user {
+    margin-left: auto;
+    flex-direction: row-reverse;
+
+    .message-bubble {
+      background: rgba(139, 92, 246, 0.15);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+    }
+
+    .message-author {
+      color: #a78bfa;
+    }
+  }
+
+  &.bot {
+    .message-bubble {
+      background: #2a2a3e;
+      border: 1px solid rgba(167, 139, 250, 0.1);
+    }
+
+    .message-author {
+      color: #c4b5fd;
+    }
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+.message-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, #a78bfa, #8b5cf6);
+  box-shadow: 0 2px 8px rgba(167, 139, 250, 0.3);
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    color: white;
+  }
+
+  .message.user & {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  }
+
+  .message.bot & {
+    background: linear-gradient(135deg, #c4b5fd, #a78bfa);
+  }
+}
+
+
+.message-bubble {
+  border-radius: 16px;
+  padding: 12px 16px;
+  min-width: 100px;
+  max-width: 100%;
+  position: relative;
+  transition: all 0.3s ease;
+
+  &:hover {
+    .message-actions {
+      opacity: 1;
+    }
+  }
+}
+
+
+.message-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.message-author {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.message-time {
+  font-size: 11px;
+  color: #64748b;
+  margin-left: 8px;
+}
+
+
+.message-text {
+  color: #f1f5f9;
+  line-height: 1.6;
+  font-size: 15px;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+
+  
+  ::ng-deep {
+    p {
+      margin: 0 0 8px 0;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    strong, b {
+      font-weight: 600;
+      color: #c4b5fd;
+    }
+
+    code {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      color: #86efac;
+    }
+
+    pre {
+      background: rgba(0, 0, 0, 0.4);
+      padding: 12px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 8px 0;
+
+      code {
+        background: none;
+        padding: 0;
+        color: #86efac;
+      }
+    }
+
+    ul, ol {
+      margin: 8px 0;
+      padding-left: 20px;
+    }
+
+    li {
+      margin: 4px 0;
+    }
+
+    a {
+      color: #a78bfa;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(167, 139, 250, 0.3);
+
+      &:hover {
+        color: #c4b5fd;
+        border-bottom-color: #c4b5fd;
+      }
+    }
+  }
+}
+
+
+.bot-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  padding: 4px 8px;
+  background: rgba(167, 139, 250, 0.1);
+  border-radius: 6px;
+  font-size: 11px;
+  color: #a78bfa;
+
+  mat-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+  }
+}
+
+
+.message-actions {
+  display: flex;
+  gap: 4px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(167, 139, 250, 0.1);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+
+  button {
+    width: 32px;
+    height: 32px;
+    color: #94a3b8 !important;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+
+    &:hover {
+      background: rgba(167, 139, 250, 0.1) !important;
+      color: #a78bfa !important;
+    }
+
+    &.liked {
+      color: #86efac !important;
+    }
+
+    &.disliked {
+      color: #fca5a5 !important;
+    }
+  }
+}
+
+
+@media (max-width: 768px) {
+  .message {
+    max-width: 90%;
+
+    &.user {
+      margin-left: 10%;
+    }
+
+    &.bot {
+      margin-right: 10%;
+    }
+  }
+
+  .message-bubble {
+    padding: 10px 14px;
+  }
+
+  .message-text {
+    font-size: 14px;
+  }
+}

@@ -1,1 +1,80 @@
-<p>chat works!</p>
+<div class="chat-container">
+
+  <!-- BIENVENUE -->
+  <ng-container *ngIf="showWelcome()">
+    <div class="empty-state">
+      <div class="bot-welcome">
+        <div class="welcome-avatar">
+          <app-bot-avatar></app-bot-avatar>
+        </div>
+        <h2>Bienvenue sur Lumin 💜</h2>
+        <p class="subtitle">Choisissez une question ou posez la vôtre</p>
+      </div>
+      <div class="suggested-questions">
+        <button class="question-card"
+          *ngFor="let question of suggestedQuestions"
+          type="button"
+          (click)="selectSuggestion(question.text)">
+          <span class="question-text">{{ question.text }}</span>
+          <mat-icon>arrow_forward</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div class="input-area">
+      <div class="input-wrapper">
+        <button mat-icon-button class="attach-btn" disabled>
+          <mat-icon>attach_file</mat-icon>
+        </button>
+        <textarea #messageInput [(ngModel)]="messageContent"
+          (keydown)="onKeyDown($event)" (input)="autoResize($event)"
+          placeholder="Posez une question..." rows="1" [disabled]="isSending">
+        </textarea>
+        <button mat-icon-button class="send-btn"
+          (click)="onSendMessage()" [disabled]="!canSend()">
+          <mat-icon>send</mat-icon>
+        </button>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- CRÉATION EN COURS -->
+  <div *ngIf="isCreating && !conversationId" class="creating-state">
+    <mat-spinner diameter="48"></mat-spinner>
+    <p>Création en cours...</p>
+  </div>
+
+  <!-- CHAT ACTIF -->
+  <div *ngIf="conversationId && !isCreating" class="chat-active">
+    <div class="messages-container" #messagesContainer>
+      <app-message-component
+        *ngFor="let message of messages; trackBy: trackMessage"
+        [message]="message">
+      </app-message-component>
+      <div *ngIf="botTyping" class="bot-typing">
+        <div class="typing-avatar"><mat-icon>smart_toy</mat-icon></div>
+        <div class="typing-dots">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+      <div *ngIf="loading" class="loading-container">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+    </div>
+    <div class="input-area">
+      <div class="input-wrapper">
+        <button mat-icon-button class="attach-btn" disabled>
+          <mat-icon>attach_file</mat-icon>
+        </button>
+        <textarea #messageInput [(ngModel)]="messageContent"
+          (keydown)="onKeyDown($event)" (input)="autoResize($event)"
+          placeholder="Posez une question..." rows="1" [disabled]="isSending">
+        </textarea>
+        <button mat-icon-button class="send-btn"
+          (click)="onSendMessage()" [disabled]="!canSend()">
+          <mat-icon>send</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>

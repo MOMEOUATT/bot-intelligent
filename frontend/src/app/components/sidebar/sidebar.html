@@ -1,1 +1,102 @@
-<p>sidebar works!</p>
+<aside class="sidebar">
+  <!-- Bouton nouvelle conversation -->
+  <button mat-raised-button class="new-conversation-btn" (click)="onNewConversation()">
+    <mat-icon>add</mat-icon>
+    <span>Nouvelle conversation</span>
+  </button>
+
+  <!-- Barre de recherche -->
+  <div class="search-container">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-icon matPrefix>search</mat-icon>
+      <input 
+        matInput 
+        placeholder="Rechercher..." 
+        [(ngModel)]="searchQuery"
+        (input)="onSearch()">
+      <button 
+        *ngIf="searchQuery" 
+        mat-icon-button 
+        matSuffix 
+        (click)="clearSearch()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <!-- Option recherche dans messages -->
+    <div class="search-options">
+      <mat-checkbox 
+        [(ngModel)]="searchInMessages"
+        (change)="onSearch()"
+        color="primary">
+        Rechercher dans les messages
+      </mat-checkbox>
+      <mat-spinner 
+        *ngIf="searchingMessages" 
+        diameter="16">
+      </mat-spinner>
+    </div>
+  </div>
+
+  <!-- Liste des conversations -->
+  <div class="conversations-list" *ngIf="!loading && filteredConversations.length > 0">
+    <div 
+      *ngFor="let conversation of filteredConversations"
+      class="conversation-item"
+      [class.active]="isActive(conversation.id)"
+      (click)="onSelectConversation(conversation)">
+      
+      <div class="conversation-icon">
+        <mat-icon>chat_bubble</mat-icon>
+      </div>
+
+      <div class="conversation-content">
+        <h4 class="conversation-title">{{ conversation.title }}</h4>
+        <p class="conversation-date">{{ formatDate(conversation.updatedAt) }}</p>
+      </div>
+
+      <button 
+        mat-icon-button 
+        class="conversation-menu-btn"
+        [matMenuTriggerFor]="conversationMenu"
+        (click)="$event.stopPropagation()">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+
+      <mat-menu #conversationMenu="matMenu">
+        <button mat-menu-item disabled>
+          <mat-icon>edit</mat-icon>
+          <span>Renommer</span>
+        </button>
+        <button mat-menu-item (click)="onDeleteConversation(conversation.id); $event.stopPropagation()">
+          <mat-icon>delete</mat-icon>
+          <span>Supprimer</span>
+        </button>
+      </mat-menu>
+    </div>
+  </div>
+
+  <!-- État vide -->
+  <div class="empty-state" *ngIf="!loading && filteredConversations.length === 0">
+    <mat-icon>chat</mat-icon>
+    <p>{{ searchQuery ? 'Aucun résultat' : 'Aucune conversation' }}</p>
+    <button 
+      *ngIf="!searchQuery" 
+      mat-button 
+      class="start-btn"
+      (click)="onNewConversation()">
+      Commencer
+    </button>
+  </div>
+
+  <!-- Loading -->
+  <div class="loading-state" *ngIf="loading">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+
+  <!-- Compteur -->
+  <div class="conversations-count" *ngIf="!loading">
+    <mat-icon>forum</mat-icon>
+    <span>{{ conversations.length }} conversation(s)</span>
+  </div>
+</aside>

@@ -1,0 +1,49 @@
+<div class="message" [class.user]="!message.isBot" [class.bot]="message.isBot">
+  <!-- AVATAR -->
+  <div class="message-avatar">
+    <mat-icon *ngIf="message.isBot">smart_toy</mat-icon>
+    <mat-icon *ngIf="!message.isBot">person</mat-icon>
+  </div>
+
+  <!-- CONTENU -->
+  <div class="message-bubble">
+    <!-- En-tête -->
+    <div class="message-header">
+      <span class="message-author">{{ message.isBot ? 'Lumin' : 'Vous' }}</span>
+      <span class="message-time">{{ formatTime(message.createdAt) }}</span>
+    </div>
+
+    <!-- Texte du message -->
+    <div class="message-text" [innerHTML]="formatMessageContent()"></div>
+
+    <!-- Indicateur bot (si message du bot) -->
+    <div *ngIf="message.isBot" class="bot-indicator">
+      <mat-icon>auto_awesome</mat-icon>
+      <span>IA</span>
+    </div>
+
+    <!-- Actions (optionnel) -->
+    <div class="message-actions" *ngIf="showActions">
+      <button 
+        mat-icon-button 
+        matTooltip="Copier"
+        (click)="onCopy()">
+        <mat-icon>content_copy</mat-icon>
+      </button>
+      <button 
+        mat-icon-button 
+        matTooltip="J'aime"
+        [class.liked]="isLiked"
+        (click)="onLike()">
+        <mat-icon>{{ isLiked ? 'thumb_up' : 'thumb_up_outline' }}</mat-icon>
+      </button>
+      <button 
+        mat-icon-button 
+        matTooltip="Je n'aime pas"
+        [class.disliked]="isDisliked"
+        (click)="onDislike()">
+        <mat-icon>{{ isDisliked ? 'thumb_down' : 'thumb_down_outline' }}</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

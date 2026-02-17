@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Message } from './message';
+import { WaveformLogo } from './waveform-logo';
 
-describe('Message', () => {
-  let component: Message;
-  let fixture: ComponentFixture<Message>;
+describe('WaveformLogo', () => {
+  let component: WaveformLogo;
+  let fixture: ComponentFixture<WaveformLogo>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Message]
+      imports: [WaveformLogo]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(Message);
+    fixture = TestBed.createComponent(WaveformLogo);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

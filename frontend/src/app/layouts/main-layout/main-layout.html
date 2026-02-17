@@ -1,1 +1,45 @@
-<p>main-layout works!</p>
+<div class="main-layout">
+
+  <!-- Header -->
+  <app-header class="layout-header"></app-header>
+
+  <!-- Body -->
+  <div class="layout-body">
+
+    <!-- Sidebar -->
+    <div class="sidebar-wrapper" [class.collapsed]="!sidebarOpen">
+      <app-sidebar></app-sidebar>
+    </div>
+
+    <!-- Bouton toggle flottant -->
+    <button
+      class="sidebar-toggle"
+      [class.collapsed]="!sidebarOpen"
+      (click)="toggleSidebar()"
+      [matTooltip]="sidebarOpen ? 'Réduire' : 'Ouvrir'"
+      matTooltipPosition="right">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+          *ngIf="sidebarOpen"
+          d="M15 18l-6-6 6-6"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+        <path
+          *ngIf="!sidebarOpen"
+          d="M9 18l6-6-6-6"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <!-- Zone principale -->
+    <div class="main-content" [class.expanded]="!sidebarOpen">
+      <router-outlet></router-outlet>
+    </div>
+
+  </div>
+</div>
