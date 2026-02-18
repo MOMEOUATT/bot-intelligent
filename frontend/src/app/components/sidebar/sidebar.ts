@@ -15,6 +15,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { catchError, forkJoin, of, Subscription } from 'rxjs';
 import { ConversationEventService } from '../../services/conversation-event-service';
+import { NotificationService } from '../../services/notification-service';
 
 @Component({
   selector: 'app-sidebar',
@@ -51,7 +52,8 @@ export class Sidebar implements OnInit {
     private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute,
-    private convEventService: ConversationEventService
+    private convEventService: ConversationEventService,
+    private notification: NotificationService
   ){}
 
   ngOnInit(): void {
@@ -213,12 +215,17 @@ export class Sidebar implements OnInit {
       next: () => {
         this.conversations = this.conversations.filter(c => c.id !== id);
         this.filteredConversations = this.filteredConversations.filter(c => c.id !== id);
+
+        this.notification.success("Conversation supprimée");
         
         if (this.currentConversationId === id) {
           this.router.navigate(['/chat']);
         }
       },
-      error: (err) => console.error('Erreur suppression:', err)
+      error: (err) => {
+        console.error('Erreur suppression:', err);
+        this.notification.error("Impossible de supprimer");
+      }
     });
   }
 

@@ -7,6 +7,7 @@ import { Message } from '../../models/message';
 import { ApiService } from '../../services/api-service';
 import { AuthService } from '../../services/auth-service';
 import { BotAvatar } from '../bot-avatar/bot-avatar';
+import { NotificationService } from '../../services/notification-service';
 
 @Component({
   selector: 'app-message-component',
@@ -31,7 +32,8 @@ export class MessageComponent {
 
   constructor(
     private apiService: ApiService,
-    private authService: AuthService
+    private authService: AuthService,
+    private notification : NotificationService
   ){}
   
   formatTime(date: Date | undefined): string {
@@ -79,11 +81,13 @@ export class MessageComponent {
   onCopy(): void {
     navigator.clipboard.writeText(this.message.content).then(() => {
       this.copied = true;
+      this.notification.success("Copié !")
       setTimeout(() => {
         this.copied = false;
       }, 2000);
     }).catch(err => {
       console.error('Erreur copie:', err);
+      this.notification.error("Impossible de copier !")
     });
   }
 
@@ -98,10 +102,12 @@ export class MessageComponent {
         next: (updatedMessage) => {
           this.message.liked = updatedMessage.liked;
           this.message.disliked = updatedMessage.disliked;
+          this.notification.info("Feedback retiré");
           this.isProcessing = false;
         },
         error: (err) => {
           console.error('Erreur remove feedback:', err);
+          this.notification.error("Erreur lors du feedback");
           this.isProcessing = false;
         }
       });
@@ -111,10 +117,12 @@ export class MessageComponent {
         next: (updatedMessage) => {
           this.message.liked = updatedMessage.liked;
           this.message.disliked = updatedMessage.disliked;
+          this.notification.success("Réponse utile !");
           this.isProcessing = false;
         },
         error: (err) => {
           console.error('Erreur like:', err);
+          this.notification.error("Erreur lors du feedback");
           this.isProcessing = false;
         }
       });
@@ -132,10 +140,12 @@ export class MessageComponent {
         next: (updatedMessage) => {
           this.message.liked = updatedMessage.liked;
           this.message.disliked = updatedMessage.disliked;
+          this.notification.info("Feedback retiré");
           this.isProcessing = false;
         },
         error: (err) => {
           console.error('Erreur remove feedback:', err);
+          this.notification.error("Erreur lors du feedback");
           this.isProcessing = false;
         }
       });
@@ -145,10 +155,12 @@ export class MessageComponent {
         next: (updatedMessage) => {
           this.message.liked = updatedMessage.liked;
           this.message.disliked = updatedMessage.disliked;
+          this.notification.success("Réponse inutile !");
           this.isProcessing = false;
         },
         error: (err) => {
           console.error('Erreur dislike:', err);
+          this.notification.error("Erreur lors du feedback");
           this.isProcessing = false;
         }
       });

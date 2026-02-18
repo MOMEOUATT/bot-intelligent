@@ -14,6 +14,7 @@ import { ApiService } from '../../services/api-service';
 import { AuthService } from '../../services/auth-service';
 import { WebsocketService } from '../../services/websocket-service';
 import { ConversationEventService } from '../../services/conversation-event-service';
+import { NotificationService } from '../../services/notification-service';
 
 interface SuggestedQuestion {
   text: string;
@@ -67,7 +68,8 @@ export class Chat implements OnInit, OnDestroy, AfterViewChecked {
     private authService: AuthService,
     private wsService: WebsocketService,
     private convEventService: ConversationEventService,
-    private cdr: ChangeDetectorRef  // ✅ AJOUTÉ
+    private cdr: ChangeDetectorRef,
+    private notification: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -151,6 +153,8 @@ export class Chat implements OnInit, OnDestroy, AfterViewChecked {
         this.conversationId = conversation.id;
         this.cdr.detectChanges();
 
+        this.notification.success("Conversation créée");
+
         this.router.navigate(['/chat', conversation.id]).then(() => {
           // ✅ Envoyer APRÈS que la navigation soit confirmée
           this._sendToApi(question);
@@ -158,6 +162,7 @@ export class Chat implements OnInit, OnDestroy, AfterViewChecked {
       },
       error: (err) => {
         console.error('Erreur:', err);
+        this.notification.error("Impossible de créer la conversation");
         this.isCreating = false;
         this.cdr.detectChanges();
       }
@@ -290,6 +295,7 @@ export class Chat implements OnInit, OnDestroy, AfterViewChecked {
       },
       error: (err) => {
         console.error('Erreur envoi:', err);
+        this.notification.error("Erreur lors de l'envoi du message");
         this.isSending = false;
         this.botTyping = false;
         this.cdr.detectChanges();
