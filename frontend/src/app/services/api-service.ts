@@ -14,6 +14,7 @@ export class ApiService {
 
   constructor(private http: HttpClient){}
 
+  // USER
   createUser(email: string, username: string, password: string): Observable<User>{
     return this.http.post<User>(`${this.apiUrl}/users`, { email, username, password });
   }
@@ -26,6 +27,7 @@ export class ApiService {
     return this.http.get<User>(`${this.apiUrl}/users/email/${email}`);
   }
 
+  // CONVERSATIONS
   createConversation(userId: number, title: string): Observable<Conversation>{
     return this.http.post<Conversation>(`${this.apiUrl}/conversations`, {userId, title});
   }
@@ -42,6 +44,7 @@ export class ApiService {
     return this.http.delete<void>(`${this.apiUrl}/conversations/${id}`);
   }
 
+  // MESSAGES
   sendMessage(conversationId: number, content: string): Observable<Message[]>{
     return this.http.post<Message[]>(`${this.apiUrl}/messages`, {
       conversationId,
@@ -57,6 +60,18 @@ export class ApiService {
     return this.http.get<Message[]>(`${this.apiUrl}/messages/conversation/${conversationId}/search`, {
       params: {keyword}
     });
+  }
+
+  likeMessage(messageId: number): Observable<Message> {
+    return this.http.put<Message>(`${this.apiUrl}/messages/${messageId}/like`, {});
+  }
+
+  dislikeMessage(messageId: number): Observable<Message> {
+    return this.http.put<Message>(`${this.apiUrl}/messages/${messageId}/dislike`, {});
+  }
+
+  removeFeedback(messageId: number): Observable<Message> {
+    return this.http.delete<Message>(`${this.apiUrl}/messages/${messageId}/feedback`);
   }
   
 }

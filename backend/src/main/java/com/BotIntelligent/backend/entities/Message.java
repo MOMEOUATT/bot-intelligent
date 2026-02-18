@@ -30,6 +30,12 @@ public class Message {
     @Column(name = "is_bot", nullable = false)
     private Boolean isBot;
 
+    @Column(name="liked")
+    private Boolean liked = false;
+
+    @Column(name="disliked")
+    private Boolean disliked = false;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

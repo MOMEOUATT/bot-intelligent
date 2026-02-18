@@ -59,6 +59,36 @@ public class MessageController {
         }
     }
 
+    @PutMapping("/{id}/like")
+    public ResponseEntity<Message> likeMessage(@PathVariable Long id){
+        try {
+            Message message = messageService.likeMessage(id);
+            return ResponseEntity.ok(message);
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    @PutMapping("/{id}/dislike")
+    public ResponseEntity<Message> dislikeMessage(@PathVariable Long id){
+        try {
+            Message message = messageService.dislikeMessage(id);
+            return ResponseEntity.ok(message);
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    @DeleteMapping("/{id}/feedback")
+    public ResponseEntity<Message> removeFeedback(@PathVariable Long id){
+        try {
+            Message message = messageService.removeFeedback(id);
+            return ResponseEntity.ok(message);
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
     @GetMapping("/conversation/{conversationId}/search")
     public ResponseEntity<List<Message>> searchMessage(@PathVariable Long conversationId, @RequestParam String keyword){
         try {

@@ -1,7 +1,9 @@
 export interface Message {
-    id?: number;
+    id: number;
     content: string;
     isBot: boolean;
+    liked?: boolean;
+    disliked?: boolean;
     createdAt: Date;
 }
 

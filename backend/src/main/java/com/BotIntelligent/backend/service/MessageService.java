@@ -82,4 +82,34 @@ public class MessageService {
     public List<Message> searchMessage(Long conversationId, String keyword){
         return messageRepository.searchMessagesByKeyword(conversationId, keyword);
     }
+
+    public Message likeMessage(Long id){
+        Message message = messageRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Message non trouvé"));
+
+        message.setLiked(true);
+        message.setDisliked(false);
+
+        return messageRepository.save(message);
+    }
+
+    public Message dislikeMessage(Long id){
+        Message message = messageRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Message non trouvé"));
+
+        message.setDisliked(true);
+        message.setLiked(false);
+
+        return messageRepository.save(message);
+    }
+
+    public Message removeFeedback(Long id){
+        Message message = messageRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Message non trouvé"));
+
+        message.setLiked(false);
+        message.setDisliked(false);
+
+        return messageRepository.save(message);
+    }
 }

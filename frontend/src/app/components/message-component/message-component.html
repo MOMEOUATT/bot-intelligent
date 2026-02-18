@@ -1,49 +1,55 @@
-<div class="message" [class.user]="!message.isBot" [class.bot]="message.isBot">
-  <!-- AVATAR -->
-  <div class="message-avatar">
-    <mat-icon *ngIf="message.isBot">smart_toy</mat-icon>
-    <mat-icon *ngIf="!message.isBot">person</mat-icon>
+<div class="message" [class.user-message]="!message.isBot" [class.bot-message]="message.isBot">
+  
+  <!-- Avatar Bot -->
+  <div class="message-avatar" *ngIf="message.isBot">
+    <app-bot-avatar></app-bot-avatar>
   </div>
 
-  <!-- CONTENU -->
-  <div class="message-bubble">
-    <!-- En-tête -->
-    <div class="message-header">
-      <span class="message-author">{{ message.isBot ? 'Lumin' : 'Vous' }}</span>
-      <span class="message-time">{{ formatTime(message.createdAt) }}</span>
+  <!-- Contenu message -->
+  <div class="message-content">
+    <div class="message-bubble">
+      <p>{{ message.content }}</p>
     </div>
 
-    <!-- Texte du message -->
-    <div class="message-text" [innerHTML]="formatMessageContent()"></div>
+    <!-- Feedback buttons (seulement pour les messages du bot) -->
+    <div class="message-actions" *ngIf="message.isBot">
+      <button 
+        mat-icon-button 
+        class="feedback-btn"
+        [class.liked]="message.liked"
+        (click)="onLike()"
+        [disabled]="isProcessing"
+        matTooltip="Utile">
+        <mat-icon>thumb_up</mat-icon>
+      </button>
 
-    <!-- Indicateur bot (si message du bot) -->
-    <div *ngIf="message.isBot" class="bot-indicator">
-      <mat-icon>auto_awesome</mat-icon>
-      <span>IA</span>
+      <button 
+        mat-icon-button 
+        class="feedback-btn"
+        [class.disliked]="message.disliked"
+        (click)="onDislike()"
+        [disabled]="isProcessing"
+        matTooltip="Pas utile">
+        <mat-icon>thumb_down</mat-icon>
+      </button>
+
+       <!-- ✅ BOUTON COPY -->
+      <button 
+        mat-icon-button 
+        class="feedback-btn copy-btn"
+        (click)="onCopy()"
+        [disabled]="isProcessing"
+        matTooltip="Copier">
+        <mat-icon>{{ copied ? 'check' : 'content_copy' }}</mat-icon>
+      </button>
     </div>
 
-    <!-- Actions (optionnel) -->
-    <div class="message-actions" *ngIf="showActions">
-      <button 
-        mat-icon-button 
-        matTooltip="Copier"
-        (click)="onCopy()">
-        <mat-icon>content_copy</mat-icon>
-      </button>
-      <button 
-        mat-icon-button 
-        matTooltip="J'aime"
-        [class.liked]="isLiked"
-        (click)="onLike()">
-        <mat-icon>{{ isLiked ? 'thumb_up' : 'thumb_up_outline' }}</mat-icon>
-      </button>
-      <button 
-        mat-icon-button 
-        matTooltip="Je n'aime pas"
-        [class.disliked]="isDisliked"
-        (click)="onDislike()">
-        <mat-icon>{{ isDisliked ? 'thumb_down' : 'thumb_down_outline' }}</mat-icon>
-      </button>
-    </div>
+    <span class="message-time">{{ formatTime(message.createdAt) }}</span>
   </div>
+
+  <!-- Avatar User -->
+  <div class="message-avatar" *ngIf="!message.isBot">
+    <div class="user-avatar">{{ getUserInitial() }}</div>
+  </div>
+
 </div>

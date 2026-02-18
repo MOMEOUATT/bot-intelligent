@@ -4,6 +4,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Message } from '../../models/message';
+import { ApiService } from '../../services/api-service';
+import { AuthService } from '../../services/auth-service';
+import { BotAvatar } from '../bot-avatar/bot-avatar';
 
 @Component({
   selector: 'app-message-component',
@@ -11,7 +14,8 @@ import { Message } from '../../models/message';
     CommonModule,
     MatIconModule,
     MatButtonModule,
-    MatTooltipModule
+    MatTooltipModule,
+    BotAvatar
   ],
   templateUrl: './message-component.html',
   styleUrl: './message-component.css',
@@ -20,9 +24,15 @@ export class MessageComponent {
 
   @Input() message!: Message;
   @Input() showActions: boolean = true;
+  isProcessing = false;
 
   isLiked: boolean = false;
   isDisliked: boolean = false;
+
+  constructor(
+    private apiService: ApiService,
+    private authService: AuthService
+  ){}
   
   formatTime(date: Date | undefined): string {
     if(!date) return "";
@@ -64,32 +74,90 @@ export class MessageComponent {
     
   }
 
+  copied = false;
+
   onCopy(): void {
-    if(navigator.clipboard){
-      navigator.clipboard.writeText(this.message.content);
-      // TODO: Afficher un toast "Copié !"
-      console.log("Message copié");
-    }
+    navigator.clipboard.writeText(this.message.content).then(() => {
+      this.copied = true;
+      setTimeout(() => {
+        this.copied = false;
+      }, 2000);
+    }).catch(err => {
+      console.error('Erreur copie:', err);
+    });
   }
 
   onLike(): void {
-    this.isLiked = !this.isLiked;
-    if(this.isLiked){
-      this.isDisliked = false;
-    }
+    if (this.isProcessing) return;
 
-    // TODO: Envoyer le feedback au backend
-    console.log("Like: ", this.message.id);
+    this.isProcessing = true;
+
+    // Si déjà liké, on retire le feedback
+    if (this.message.liked) {
+      this.apiService.removeFeedback(this.message.id).subscribe({
+        next: (updatedMessage) => {
+          this.message.liked = updatedMessage.liked;
+          this.message.disliked = updatedMessage.disliked;
+          this.isProcessing = false;
+        },
+        error: (err) => {
+          console.error('Erreur remove feedback:', err);
+          this.isProcessing = false;
+        }
+      });
+    } else {
+      // Sinon on like
+      this.apiService.likeMessage(this.message.id).subscribe({
+        next: (updatedMessage) => {
+          this.message.liked = updatedMessage.liked;
+          this.message.disliked = updatedMessage.disliked;
+          this.isProcessing = false;
+        },
+        error: (err) => {
+          console.error('Erreur like:', err);
+          this.isProcessing = false;
+        }
+      });
+    }
   }
 
   onDislike(): void {
-    this.isDisliked = !this.isDisliked;
-    if(this.isDisliked){
-      this.isLiked = false;
-    }
+    if (this.isProcessing) return;
 
-    // TODO: Envoyer le feedback au backend
-    console.log("Dislike: ", this.message.id);
+    this.isProcessing = true;
+
+    // Si déjà disliké, on retire le feedback
+    if (this.message.disliked) {
+      this.apiService.removeFeedback(this.message.id).subscribe({
+        next: (updatedMessage) => {
+          this.message.liked = updatedMessage.liked;
+          this.message.disliked = updatedMessage.disliked;
+          this.isProcessing = false;
+        },
+        error: (err) => {
+          console.error('Erreur remove feedback:', err);
+          this.isProcessing = false;
+        }
+      });
+    } else {
+      // Sinon on dislike
+      this.apiService.dislikeMessage(this.message.id).subscribe({
+        next: (updatedMessage) => {
+          this.message.liked = updatedMessage.liked;
+          this.message.disliked = updatedMessage.disliked;
+          this.isProcessing = false;
+        },
+        error: (err) => {
+          console.error('Erreur dislike:', err);
+          this.isProcessing = false;
+        }
+      });
+    }
+  }
+
+  getUserInitial(): string {
+    const user = this.authService.currentUserValue;
+    return user?.username?.charAt(0).toUpperCase() || 'U';
   }
 
 }
