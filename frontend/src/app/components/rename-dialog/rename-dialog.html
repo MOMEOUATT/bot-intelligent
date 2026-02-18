@@ -1,29 +1,46 @@
-<h2 mat-dialog-title>Renommer la conversation</h2>
-    
-    <mat-dialog-content>
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Nouveau titre</mat-label>
-        <input 
-          matInput 
-          [(ngModel)]="newTitle"
-          (keyup.enter)="onConfirm()"
-          maxlength="100"
-          autofocus>
-        <mat-hint align="end">{{newTitle.length}}/100</mat-hint>
-      </mat-form-field>
-      
-      <p class="error-msg" *ngIf="showError">
-        Le titre doit contenir entre 3 et 100 caractères
-      </p>
-    </mat-dialog-content>
-    
-    <mat-dialog-actions align="end">
-      <button mat-button (click)="onCancel()">Annuler</button>
-      <button 
-        mat-raised-button 
-        color="primary" 
-        (click)="onConfirm()"
-        [disabled]="!isValid()">
-        Renommer
-      </button>
-    </mat-dialog-actions>
+<div class="dialog-container">
+    <div class="dialog-header">
+        <mat-icon class="edit-icon">edit_note</mat-icon>
+        <h2>Renommer la conversation</h2>
+        <p class="subtitle">Donnez un nom significatif à votre conversation</p>
+    </div>
+
+    <div class="dialog-content">
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Titre de la conversation</mat-label>
+            <input 
+                matInput 
+                [(ngModel)]="newTitle"
+                (keyup.enter)="onConfirm()"
+                placeholder="Entrez un nouveau titre"
+                maxlength="100"
+                autofocus>
+            <mat-icon matPrefix>title</mat-icon>
+            <mat-hint align="end">{{ newTitle.length }}/100</mat-hint>
+        </mat-form-field>
+
+        <div class="error-box" *ngIf="showError">
+            <mat-icon>error_outline</mat-icon>
+            <span>Le titre doit contenir entre 3 et 100 caractères</span>
+        </div>
+
+        <div class="info-box">
+            <mat-icon>info_outline</mat-icon>
+            <span>Le titre sera visible dans la sidebar</span>
+        </div>
+    </div>
+
+    <div class="dialog-actions">
+        <button mat-button class="cancel-btn" (click)="onCancel()">
+            Annuler
+        </button>
+        <button 
+            mat-raised-button 
+            class="confirm-btn"
+            (click)="onConfirm()"
+            [disabled]="!isValid()">
+            <mat-icon>check</mat-icon>
+            Renommer
+        </button>
+    </div>
+</div>

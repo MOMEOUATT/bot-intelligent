@@ -8,7 +8,7 @@
     </div>
   </div>
 
-  <!-- Centre : Logo waveform + nom -->
+  <!-- Centre : Logo -->
   <div class="header-center">
     <app-waveform-logo size="medium"></app-waveform-logo>
     <span class="brand-name">Lumin</span>
@@ -26,10 +26,20 @@
         <span>{{ currentUser?.email }}</span>
       </div>
       <mat-divider></mat-divider>
+      
+      <!-- ✅ NOUVEAU : Lien vers le profil -->
+      <button mat-menu-item (click)="onProfile()">
+        <mat-icon>person</mat-icon>
+        <span>Mon profil</span>
+      </button>
+      
       <button mat-menu-item disabled>
         <mat-icon>settings</mat-icon>
         <span>Paramètres</span>
       </button>
+      
+      <mat-divider></mat-divider>
+      
       <button mat-menu-item (click)="onLogout()" class="logout-item">
         <mat-icon>logout</mat-icon>
         <span>Se déconnecter</span>

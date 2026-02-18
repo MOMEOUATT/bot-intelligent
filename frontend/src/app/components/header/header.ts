@@ -56,6 +56,7 @@ export class Header implements OnInit {
 
   onProfile(): void {
     // TODO: Implémenter la page profil
+    this.router.navigate(["/profile"]);
     console.log("Profil");
   }
 

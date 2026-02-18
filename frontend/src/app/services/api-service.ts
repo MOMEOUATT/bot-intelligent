@@ -27,6 +27,14 @@ export class ApiService {
     return this.http.get<User>(`${this.apiUrl}/users/email/${email}`);
   }
 
+  updateUserProfile(id: number, email: string, username: string): Observable<User>{
+    return this.http.put<User>(`${this.apiUrl}/users/${id}/profile`,{email, username});
+  }
+
+  changePassword(id:number, oldPassword: string, newPassword: string){
+    return this.http.put<User>(`${this.apiUrl}/users/${id}/password`,{oldPassword, newPassword});
+  }
+
   // CONVERSATIONS
   createConversation(userId: number, title: string): Observable<Conversation>{
     return this.http.post<Conversation>(`${this.apiUrl}/conversations`, {userId, title});
