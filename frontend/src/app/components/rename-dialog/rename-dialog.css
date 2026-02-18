@@ -1,0 +1,19 @@
+.full-width {
+      width: 100%;
+      margin-top: 8px;
+    }
+    
+    .error-msg {
+      color: #ef4444;
+      font-size: 13px;
+      margin: 8px 0 0;
+    }
+    
+    mat-dialog-content {
+      min-width: 400px;
+      padding: 20px 24px;
+    }
+    
+    mat-dialog-actions {
+      padding: 12px 24px;
+    }

@@ -16,6 +16,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { catchError, forkJoin, of, Subscription } from 'rxjs';
 import { ConversationEventService } from '../../services/conversation-event-service';
 import { NotificationService } from '../../services/notification-service';
+import { MatDialog } from '@angular/material/dialog';
+import { RenameDialog } from '../rename-dialog/rename-dialog';
 
 @Component({
   selector: 'app-sidebar',
@@ -53,7 +55,8 @@ export class Sidebar implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private convEventService: ConversationEventService,
-    private notification: NotificationService
+    private notification: NotificationService,
+    private dialog: MatDialog
   ){}
 
   ngOnInit(): void {
@@ -198,14 +201,31 @@ export class Sidebar implements OnInit {
   }
 
   onRenameConversation(conversation: Conversation): void {
+    const dialogRef = this.dialog.open(RenameDialog, {
+      width: '500px'
+    });
 
-    const newTitle = prompt("Nouveau nom de la conversation:", conversation.title);
-    
-    if(newTitle && newTitle.trim() && newTitle !== conversation.title){
-      // TODO: Implémenter l'endpoint de mise à jour
-      conversation.title = newTitle.trim();
-      console.log("Renommer la conversation: ", conversation.id, newTitle);
-    }
+    // Passer le titre après ouverture
+    dialogRef.componentInstance.newTitle = conversation.title;
+
+    dialogRef.afterClosed().subscribe(newTitle => {
+      if (newTitle && newTitle !== conversation.title) {
+        this.apiService.renameConversation(conversation.id, newTitle).subscribe({
+          next: (updated) => {
+            const index = this.conversations.findIndex(c => c.id === conversation.id);
+            if (index !== -1) {
+              this.conversations[index].title = updated.title;
+              this.filteredConversations = [...this.conversations];
+            }
+            this.notification.success('Conversation renommée');
+          },
+          error: (err) => {
+            console.error('Erreur:', err);
+            this.notification.error('Impossible de renommer');
+          }
+        });
+      }
+    });
   }
 
   onDeleteConversation(id: number): void {

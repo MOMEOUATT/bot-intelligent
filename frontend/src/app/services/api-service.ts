@@ -44,6 +44,10 @@ export class ApiService {
     return this.http.delete<void>(`${this.apiUrl}/conversations/${id}`);
   }
 
+  renameConversation(id: number, title: string): Observable<Conversation> {
+    return this.http.put<Conversation>(`${this.apiUrl}/conversations/${id}/rename`, { title });
+  }
+
   // MESSAGES
   sendMessage(conversationId: number, content: string): Observable<Message[]>{
     return this.http.post<Message[]>(`${this.apiUrl}/messages`, {

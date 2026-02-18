@@ -1,0 +1,29 @@
+<h2 mat-dialog-title>Renommer la conversation</h2>
+    
+    <mat-dialog-content>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Nouveau titre</mat-label>
+        <input 
+          matInput 
+          [(ngModel)]="newTitle"
+          (keyup.enter)="onConfirm()"
+          maxlength="100"
+          autofocus>
+        <mat-hint align="end">{{newTitle.length}}/100</mat-hint>
+      </mat-form-field>
+      
+      <p class="error-msg" *ngIf="showError">
+        Le titre doit contenir entre 3 et 100 caractères
+      </p>
+    </mat-dialog-content>
+    
+    <mat-dialog-actions align="end">
+      <button mat-button (click)="onCancel()">Annuler</button>
+      <button 
+        mat-raised-button 
+        color="primary" 
+        (click)="onConfirm()"
+        [disabled]="!isValid()">
+        Renommer
+      </button>
+    </mat-dialog-actions>

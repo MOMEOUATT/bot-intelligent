@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/conversations")
@@ -45,11 +46,30 @@ public class ConversationController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Conversation> updateConversationTitle(@PathVariable Long id, @RequestBody ConversationDto dto) {
+//    @PutMapping("/{id}")
+//    public ResponseEntity<Conversation> updateConversationTitle(@PathVariable Long id, @RequestBody ConversationDto dto) {
+//        try {
+//            Conversation updated = conversationService.updateConversationTitle(id, dto.getTitle());
+//            return ResponseEntity.ok(updated);
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+//        }
+//    }
+
+    @PutMapping("/{id}/rename")
+    public ResponseEntity<Conversation> renameConversation(@PathVariable Long id, @RequestBody Map<String, String> payload) {
         try {
-            Conversation updated = conversationService.updateConversationTitle(id, dto.getTitle());
-            return ResponseEntity.ok(updated);
+            String newTitle = payload.get("title");
+
+            if(newTitle == null || newTitle.trim().isEmpty()){
+                return ResponseEntity.badRequest().body(null);
+            }
+            if(newTitle.length() <3 || newTitle.length()>100) {
+                return ResponseEntity.badRequest().body(null);
+            }
+
+            Conversation renamed = conversationService.updateConversationTitle(id, newTitle);
+            return ResponseEntity.ok(renamed);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
