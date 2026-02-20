@@ -43,6 +43,41 @@ public class MessageService {
         return savedUserMessage;
     }
 
+    public List<Message> sendMessage(Long conversationId, String content, String fileUrl, String fileName) {
+        Conversation conversation = conversationRepository.findById(conversationId)
+                .orElseThrow(() -> new RuntimeException("Conversation non trouvée"));
+
+        // Message utilisateur
+        Message userMessage = new Message();
+        userMessage.setConversation(conversation);
+        userMessage.setContent(content != null && !content.isEmpty() ? content : "");
+        userMessage.setIsBot(false);
+        userMessage.setCreatedAt(LocalDateTime.now());
+        userMessage.setFileUrl(fileUrl);
+        userMessage.setFileName(fileName);
+        userMessage = messageRepository.save(userMessage);
+
+        // Mettre à jour le timestamp de la conversation
+        conversationService.updateConversationTimestamp(conversationId);
+
+        // Générer la réponse du bot
+        String botResponse;
+        if (fileUrl != null && !fileUrl.isEmpty()) {
+            botResponse = "J'ai bien reçu votre image. Comment puis-je vous aider ?";
+        } else {
+            botResponse = botService.generateResponseWithContext(content, conversationId);
+        }
+
+        Message botMessage = new Message();
+        botMessage.setConversation(conversation);
+        botMessage.setContent(botResponse);
+        botMessage.setIsBot(true);
+        botMessage.setCreatedAt(LocalDateTime.now());
+        botMessage = messageRepository.save(botMessage);
+
+        return List.of(userMessage, botMessage);
+    }
+
     public Message sendBotResponse(Long conversationId, String content){
         Conversation conversation = conversationRepository.findById(conversationId)
                 .orElseThrow(() -> new RuntimeException("Conversation non trouvée"));

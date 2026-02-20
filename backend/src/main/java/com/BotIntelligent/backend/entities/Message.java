@@ -36,6 +36,12 @@ public class Message {
     @Column(name="disliked")
     private Boolean disliked = false;
 
+    @Column(name = "file_url")
+    private String fileUrl;
+
+    @Column(name = "file_name")
+    private String fileName;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

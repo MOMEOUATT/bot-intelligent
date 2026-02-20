@@ -140,6 +140,44 @@
   color: #10b981 !important;
 }
 
+/* ===== IMAGE DANS MESSAGE ===== */
+.message-image {
+  margin-bottom: 8px;
+  border-radius: 12px;
+  overflow: hidden;
+  max-width: 300px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.message-image:hover {
+  transform: scale(1.02);
+}
+
+.message-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+}
+
+.user-message .message-image {
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.bot-message .message-image {
+  border: 2px solid rgba(167, 139, 250, 0.2);
+}
+
+/* Message avec image ET texte */
+.message-bubble p {
+  margin: 0;
+}
+
+.message-bubble .message-image + p {
+  margin-top: 8px;
+}
+
 /* ===== HEURE ===== */
 .message-time {
   display: block;

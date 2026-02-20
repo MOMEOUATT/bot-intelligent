@@ -172,4 +172,14 @@ export class MessageComponent {
     return user?.username?.charAt(0).toUpperCase() || 'U';
   }
 
+  getImageUrl(fileUrl: string): string {
+    // Construire l'URL complète
+    return `http://localhost:8080${fileUrl}`;
+  }
+
+  onImageClick(fileUrl: string): void {
+    // Ouvrir l'image dans un nouvel onglet
+    window.open(this.getImageUrl(fileUrl), '_blank');
+  }
+
 }

@@ -4,6 +4,8 @@ export interface Message {
     isBot: boolean;
     liked?: boolean;
     disliked?: boolean;
+    fileUrl?: string;
+    fileName?: string;
     createdAt: Date;
 }
 

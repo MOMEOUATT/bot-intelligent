@@ -270,7 +270,59 @@ textarea:disabled { opacity: 0.5; cursor: not-allowed; }
   transform: scale(1.1);
   box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
 }
-.send-btn:disabled { opacity: 0.35; }
+.send-btn:disabled { 
+  opacity: 0.35; 
+}
+
+/* ===== FILE PREVIEW ===== */
+.file-preview {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid rgba(167, 139, 250, 0.3);
+  margin: 0 8px;
+  flex-shrink: 0;
+}
+
+.file-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.remove-file-btn {
+  position: absolute !important;
+  top: -8px;
+  right: -8px;
+  width: 24px !important;
+  height: 24px !important;
+  min-width: 24px !important;
+  padding: 0 !important;
+  background: rgba(239, 68, 68, 0.9) !important;
+  color: white !important;
+}
+
+.remove-file-btn mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+.remove-file-btn:hover {
+  background: #ef4444 !important;
+}
+
+/* Attach button enabled */
+.attach-btn:not(:disabled) {
+  color: #a78bfa !important;
+  opacity: 1;
+}
+
+.attach-btn:not(:disabled):hover {
+  background: rgba(167, 139, 250, 0.1) !important;
+}
 
 /* Scrollbar messages */
 .messages-container::-webkit-scrollbar { width: 5px; }

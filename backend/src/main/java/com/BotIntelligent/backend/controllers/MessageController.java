@@ -6,9 +6,11 @@ import com.BotIntelligent.backend.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/messages")
@@ -18,16 +20,40 @@ public class MessageController {
     @Autowired
     private MessageService messageService;
 
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+
+    // ✅ ENDPOINT UNIFIÉ - gère texte ET fichiers
     @PostMapping
-    public ResponseEntity<Message[]> sendMessage(@RequestBody MessageDto dto) {
+    public ResponseEntity<List<Message>> sendMessage(@RequestBody Map<String, Object> payload) {
         try {
-            Message userMessage = messageService.sendUserMessage(dto.getConversationId(), dto.getContent());
+            Long conversationId = Long.valueOf(payload.get("conversationId").toString());
+            String content = payload.get("content") != null ? payload.get("content").toString() : "";
+            String fileUrl = payload.get("fileUrl") != null ? payload.get("fileUrl").toString() : null;
+            String fileName = payload.get("fileName") != null ? payload.get("fileName").toString() : null;
 
-            Message botMessage = messageService.sendBotResponse(dto.getConversationId(), dto.getContent());
+            System.out.println("=== BACKEND RECEIVE ===");
+            System.out.println("ConversationId: " + conversationId);
+            System.out.println("Content: " + content);
+            System.out.println("FileUrl: " + fileUrl);
+            System.out.println("FileName: " + fileName);
 
-            Message[] messages = {userMessage, botMessage};
-            return ResponseEntity.status(HttpStatus.CREATED).body(messages);
+            List<Message> messages = messageService.sendMessage(conversationId, content, fileUrl, fileName);
+
+            System.out.println("=== BACKEND RESPONSE ===");
+            System.out.println("Messages count: " + messages.size());
+            messages.forEach(m -> {
+                System.out.println("- Message id=" + m.getId() + " isBot=" + m.getIsBot() + " fileUrl=" + m.getFileUrl());
+            });
+
+            // Broadcaster via WebSocket
+            for (Message msg : messages) {
+                messagingTemplate.convertAndSend("/topic/conversation/" + conversationId, msg);
+            }
+
+            return ResponseEntity.ok(messages);
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }

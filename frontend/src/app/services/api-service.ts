@@ -57,11 +57,21 @@ export class ApiService {
   }
 
   // MESSAGES
-  sendMessage(conversationId: number, content: string): Observable<Message[]>{
-    return this.http.post<Message[]>(`${this.apiUrl}/messages`, {
+  sendMessage(conversationId: number, content: string, fileUrl?: string, fileName?: string): Observable<Message[]>{
+    const payload: any = {
       conversationId,
       content
-    });
+    };
+    
+    if (fileUrl) {
+      payload.fileUrl = fileUrl;
+    }
+    
+    if (fileName) {
+      payload.fileName = fileName;
+    }
+    
+    return this.http.post<Message[]>(`${this.apiUrl}/messages`, payload);
   }
 
   getConversationMessage(conversationId: number): Observable<Message[]>{
@@ -86,4 +96,10 @@ export class ApiService {
     return this.http.delete<Message>(`${this.apiUrl}/messages/${messageId}/feedback`);
   }
   
+  // FICHIERS
+  uploadFile(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append("file", file);
+    return this.http.post(`${this.apiUrl}/files/upload`, formData);
+  }
 }

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewChecked, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, ChangeDetectorRef, Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -15,6 +15,7 @@ import { AuthService } from '../../services/auth-service';
 import { WebsocketService } from '../../services/websocket-service';
 import { ConversationEventService } from '../../services/conversation-event-service';
 import { NotificationService } from '../../services/notification-service';
+// import { FilePreviewPipe } from '../../pipes/file-preview-pipe';
 
 interface SuggestedQuestion {
   text: string;
@@ -31,7 +32,8 @@ interface SuggestedQuestion {
     MatProgressSpinnerModule,
     MatTooltipModule,
     BotAvatar,
-    MessageComponent
+    MessageComponent,
+    // FilePreviewPipe
 ],
   templateUrl: './chat.html',
   styleUrl: './chat.css',
@@ -40,6 +42,7 @@ export class Chat implements OnInit, OnDestroy, AfterViewChecked {
 
   @ViewChild('messagesContainer') messagesContainer?: ElementRef;
   @ViewChild('messageInput') messageInput?: ElementRef;
+  // @ViewChild('fileInput') fileInput?: ElementRef<HTMLInputElement>;
 
   conversationId: number | null = null;
   messages: Message[] = [];
@@ -49,6 +52,10 @@ export class Chat implements OnInit, OnDestroy, AfterViewChecked {
   botTyping = false;
   isCreating = false;
   shouldScrollToBottom = false;
+  // selectedFile: File | null = null;
+  // uploadProgress = 0;
+  // fileInputKey = 0; // ✅ Force le re-render de l'input
+  // isUploading = false
 
   suggestedQuestions: SuggestedQuestion[] = [
     { text: "Comment puis-je améliorer la qualité de mon sommeil et établir un rythme de sommeil plus régulier ?" },
@@ -69,7 +76,8 @@ export class Chat implements OnInit, OnDestroy, AfterViewChecked {
     private wsService: WebsocketService,
     private convEventService: ConversationEventService,
     private cdr: ChangeDetectorRef,
-    private notification: NotificationService
+    private notification: NotificationService,
+    private zone: NgZone
   ) {}
 
   ngOnInit(): void {
@@ -206,6 +214,36 @@ export class Chat implements OnInit, OnDestroy, AfterViewChecked {
     });
   }
 
+  // ✅ Sélection de fichier
+  // onFileSelected(event: Event): void {
+  //   const input = event.target as HTMLInputElement;
+  //   if (input.files && input.files.length > 0) {
+  //     const file = input.files[0];
+      
+  //     // Vérifier type
+  //     if (!file.type.startsWith('image/')) {
+  //       this.notification.error('Seules les images sont acceptées');
+  //       return;
+  //     }
+      
+  //     // Vérifier taille (5MB max)
+  //     if (file.size > 5 * 1024 * 1024) {
+  //       this.notification.error('L\'image est trop volumineuse (max 5MB)');
+  //       return;
+  //     }
+      
+  //     this.selectedFile = file;
+  //   }
+  // }
+
+  // ✅ Retirer le fichier sélectionné
+  // removeFile(): void {
+  //   this.selectedFile = null;
+  //   // if (this.fileInput) {
+  //   //   this.fileInput.nativeElement.value = '';
+  //   // }
+  // }
+
   onSendMessage(): void {
     if (!this.messageContent.trim() || this.isSending) return;
 
@@ -232,6 +270,7 @@ export class Chat implements OnInit, OnDestroy, AfterViewChecked {
         },
         error: (err) => {
           console.error('Erreur:', err);
+          this.notification.error('Impossible de créer la conversation');
           this.isCreating = false;
           this.cdr.detectChanges();
         }
@@ -241,10 +280,12 @@ export class Chat implements OnInit, OnDestroy, AfterViewChecked {
 
     const content = this.messageContent.trim();
     this.messageContent = '';
+    
     setTimeout(() => {
       const ta = this.messageInput?.nativeElement;
       if (ta) ta.style.height = 'auto';
     }, 10);
+
     this._sendToApi(content);
   }
 
@@ -256,6 +297,9 @@ export class Chat implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   canSend(): boolean {
+    // return (this.messageContent.trim().length > 0 || this.selectedFile !== null) && 
+    //       !this.isSending && 
+    //       !this.isUploading;
     return this.messageContent.trim().length > 0 && !this.isSending;
   }
 
@@ -302,6 +346,85 @@ export class Chat implements OnInit, OnDestroy, AfterViewChecked {
       }
     });
   }
+
+  // ✅ Nouvelle méthode pour envoyer avec fichier
+  // private _sendWithFile(content: string, file: File): void {
+  //   console.log('=== START SEND WITH FILE ===');
+    
+  //   this.isUploading = true;
+  //   this.isSending = true;
+  //   this.botTyping = true;
+  //   this.isCreating = false;
+  //   this.cdr.detectChanges();
+
+  //   this.apiService.uploadFile(file).subscribe({
+  //     next: (uploadResponse) => {
+  //       console.log('Upload response:', uploadResponse);
+        
+  //       this.apiService.sendMessage(
+  //         this.conversationId!,
+  //         content,
+  //         uploadResponse.fileUrl,
+  //         uploadResponse.fileName
+  //       ).subscribe({
+  //         next: (responseMessages) => {
+  //           this.zone.run(() => {
+  //             console.log('=== FRONTEND RESPONSE ===');
+  //             console.log('Messages count:', responseMessages.length);
+              
+  //             this.messages = [...this.messages, ...responseMessages];
+  //             console.log('New messages array length:', this.messages.length);
+              
+  //             this.shouldScrollToBottom = true;
+  //             this.isUploading = false;
+  //             this.isSending = false;
+  //             this.botTyping = false;
+              
+  //             // this.resetFileInput(); // ✅ Méthode dédiée
+              
+  //             this.cdr.markForCheck();
+  //             this.cdr.detectChanges();
+              
+  //             console.log('=== END ===');
+  //           });
+  //         },
+  //         error: (err) => {
+  //           this.zone.run(() => {
+  //             console.error('=== ERROR SENDING MESSAGE ===', err);
+  //             this.notification.error('Erreur lors de l\'envoi du message');
+  //             this.isUploading = false;
+  //             this.isSending = false;
+  //             this.botTyping = false;
+              
+  //             // this.resetFileInput(); // ✅ Méthode dédiée
+              
+  //             this.cdr.detectChanges();
+  //           });
+  //         }
+  //       });
+  //     },
+  //     error: (err) => {
+  //       this.zone.run(() => {
+  //         console.error('=== ERROR UPLOADING FILE ===', err);
+  //         this.notification.error('Erreur lors de l\'upload du fichier');
+  //         this.isUploading = false;
+  //         this.isSending = false;
+  //         this.botTyping = false;
+          
+  //         // this.resetFileInput(); // ✅ Méthode dédiée
+          
+  //         this.cdr.detectChanges();
+  //       });
+  //     }
+  //   });
+  // }
+
+  // ✅ Méthode dédiée pour reset l'input file
+  // private resetFileInput(): void {
+  //   this.selectedFile = null;
+  //   this.fileInputKey++; // ✅ Force Angular à recréer l'input
+  //   console.log('File input reset with key:', this.fileInputKey);
+  // }
 
   private scrollToBottom(): void {
     setTimeout(() => {

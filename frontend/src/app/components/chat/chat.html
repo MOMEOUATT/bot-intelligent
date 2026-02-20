@@ -22,15 +22,26 @@
     </div>
     <div class="input-area">
       <div class="input-wrapper">
-        <button mat-icon-button class="attach-btn" disabled>
+        
+        <button mat-icon-button class="attach-btn" disabled matTooltip="Bientôt disponible">
           <mat-icon>attach_file</mat-icon>
         </button>
-        <textarea #messageInput [(ngModel)]="messageContent"
-          (keydown)="onKeyDown($event)" (input)="autoResize($event)"
-          placeholder="Posez une question..." rows="1" [disabled]="isSending">
+
+        <textarea
+          #messageInput
+          [(ngModel)]="messageContent"
+          (keydown)="onKeyDown($event)"
+          (input)="autoResize($event)"
+          placeholder="Posez une question..."
+          rows="1"
+          [disabled]="isSending">
         </textarea>
-        <button mat-icon-button class="send-btn"
-          (click)="onSendMessage()" [disabled]="!canSend()">
+
+        <button
+          mat-icon-button
+          class="send-btn"
+          (click)="onSendMessage()"
+          [disabled]="!canSend()">
           <mat-icon>send</mat-icon>
         </button>
       </div>
