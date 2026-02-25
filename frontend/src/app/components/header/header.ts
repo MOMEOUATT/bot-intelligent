@@ -8,6 +8,8 @@ import { User } from '../../models/user';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { WaveformLogo } from '../waveform-logo/waveform-logo';
+import { ThemeService } from '../../services/theme-service';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-header',
@@ -17,7 +19,8 @@ import { WaveformLogo } from '../waveform-logo/waveform-logo';
     MatMenuModule,
     MatDividerModule,
     CommonModule,
-    WaveformLogo
+    WaveformLogo,
+    MatTooltipModule
   ],
   templateUrl: './header.html',
   styleUrl: './header.css',
@@ -28,7 +31,8 @@ export class Header implements OnInit {
   
   constructor(
     private authService: AuthService, 
-    private router: Router
+    private router: Router,
+    private themeService: ThemeService
   ){}
 
   ngOnInit(): void {
@@ -72,7 +76,16 @@ export class Header implements OnInit {
       window.location.href = '/auth';
     }, 100);
   }
+
   onDashboard(): void {
     this.router.navigate(['/dashboard']);
+  }
+
+  toggleTheme(): void {
+    this.themeService.toggleTheme();
+  }
+
+  isDarkTheme(): boolean {
+    return this.themeService.isDarkTheme();
   }
 }

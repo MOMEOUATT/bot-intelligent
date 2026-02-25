@@ -14,8 +14,17 @@
     <span class="brand-name">Lumin</span>
   </div>
 
-  <!-- Droite : Menu -->
+  <!-- Droite : Toggle thème + Menu -->
   <div class="header-right">
+    <!-- ✅ BOUTON TOGGLE THÈME -->
+    <button 
+      mat-icon-button 
+      class="theme-toggle"
+      (click)="toggleTheme()"
+      [matTooltip]="isDarkTheme() ? 'Mode clair' : 'Mode sombre'">
+      <mat-icon>{{ isDarkTheme() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+    </button>
+
     <button mat-icon-button [matMenuTriggerFor]="userMenu" class="menu-trigger">
       <mat-icon>more_vert</mat-icon>
     </button>
@@ -26,13 +35,12 @@
         <span>{{ currentUser?.email }}</span>
       </div>
       <mat-divider></mat-divider>
-
+      
       <button mat-menu-item (click)="onDashboard()">
         <mat-icon>dashboard</mat-icon>
         <span>Tableau de bord</span>
       </button>
       
-      <!-- ✅ NOUVEAU : Lien vers le profil -->
       <button mat-menu-item (click)="onProfile()">
         <mat-icon>person</mat-icon>
         <span>Mon profil</span>

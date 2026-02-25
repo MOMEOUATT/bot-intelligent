@@ -46,15 +46,16 @@
                 <div class="form-actions">
                     <button 
                         mat-raised-button 
-                        color="primary" 
+                        class="confirm-btn" 
                         type="submit"
                         [disabled]="loading || !hasChanges()">
                         <mat-icon>save</mat-icon>
                         {{ loading ? 'Enregistrement...' : 'Enregistrer' }}
                     </button>
 
-                    <button 
+                    <button
                         mat-button 
+                        class="cancel-btn"
                         type="button"
                         (click)="onCancel()"
                         [disabled]="loading">

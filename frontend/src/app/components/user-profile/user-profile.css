@@ -15,13 +15,15 @@
     justify-content: center;
     align-items: flex-start;
     padding: 40px 20px;
-    background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%);
+    /* background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%); */
+    background: var(--bg-primary);
 }
 
 .profile-card {
     width: 100%;
     max-width: 600px;
-    background: rgba(26, 31, 46, 0.95) !important;
+    /* background: rgba(26, 31, 46, 0.95) !important; */
+    background: var(--bg-card);
     border: 1px solid rgba(167, 139, 250, 0.15);
     border-radius: 16px;
     margin-bottom: 40px; /* ✅ Espace en bas */
@@ -38,7 +40,8 @@
 .profile-header h2 {
     font-size: 24px;
     font-weight: 600;
-    color: #f1f5f9;
+    /* color: #f1f5f9; */
+    color: var(--text-primary);
     margin: 0;
 }
 
@@ -84,11 +87,26 @@
     width: 100%;
 }
 
+/* .full-width input {
+    color: gr;
+} */
+
 .form-actions {
     display: flex;
     gap: 12px;
     justify-content: flex-end;
     margin-top: 16px;
+}
+
+.confirm-btn:not(:disabled) {
+    background: linear-gradient(135deg, #8b5cf6, #a78bfa) !important;
+    color: white !important;
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+
+.cancel-btn {
+    background: rgb(253, 141, 141) !important;
+    color: white !important;
 }
 
 .form-actions button {
@@ -104,7 +122,8 @@
 .password-section h3 {
     font-size: 16px;
     font-weight: 500;
-    color: #f1f5f9;
+    /* color: #f1f5f9; */
+    color: var(--text-secondary);
     margin: 0 0 16px;
 }
 
@@ -121,7 +140,7 @@
 }
 
 ::ng-deep .mat-mdc-text-field-wrapper {
-    background: rgba(42, 42, 62, 0.6) !important;
+    background: var(--bg-card2) !important;
 }
 
 ::ng-deep .mdc-text-field--outlined .mdc-notched-outline__leading,
@@ -131,7 +150,7 @@
 }
 
 ::ng-deep .mat-mdc-input-element {
-    color: #e2e8f0 !important;
+    color: var(--text-primary) !important;
 }
 
 ::ng-deep .mat-mdc-form-field-icon-prefix mat-icon {

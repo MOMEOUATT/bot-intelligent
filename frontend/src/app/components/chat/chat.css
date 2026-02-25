@@ -1,16 +1,9 @@
-:host {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 100%;
-}
-
 .chat-container {
   display: flex;
   flex-direction: column;
   height: 100%;
   width: 100%;
-  background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%);
+  background: var(--bg-primary);
 }
 
 /* ===== ÉTAT VIDE ===== */
@@ -42,7 +35,8 @@
 .bot-welcome h2 {
   font-size: 28px;
   font-weight: 600;
-  color: #f1f5f9;
+  /* color: #f1f5f9; */
+  color: var(--accent-gradient);
   margin: 0 0 10px;
 }
 
@@ -66,8 +60,10 @@
 /* ✅ BUTTON au lieu de DIV — clics natifs garantis */
 .question-card {
   all: unset; /* Reset complet du bouton */
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(167, 139, 250, 0.05));
-  border: 1px solid rgba(167, 139, 250, 0.2);
+  /* background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(167, 139, 250, 0.05)); */
+  background: var(--bg-card2) !important;
+  /* border: 1px solid rgba(167, 139, 250, 0.2); */
+  border: 1px solid var(--border-primary) !important;
   border-radius: 16px;
   padding: 20px 22px;
   cursor: pointer;
@@ -81,9 +77,11 @@
 
 .question-card:hover {
   background: linear-gradient(135deg, rgba(139, 92, 246, 0.22), rgba(167, 139, 250, 0.12));
-  border-color: rgba(167, 139, 250, 0.5);
+  /* border-color: rgba(167, 139, 250, 0.5); */
+  border-color: var(--accent-primary) !important;
   transform: translateY(-3px);
-  box-shadow: 0 8px 24px rgba(139, 92, 246, 0.25);
+  /* box-shadow: 0 8px 24px rgba(139, 92, 246, 0.25); */
+  box-shadow: var(--shadow-md);
 }
 
 .question-card:active {
@@ -92,7 +90,8 @@
 
 .question-text {
   font-size: 14px;
-  color: #e2e8f0;
+  /* color: #e2e8f0; */
+  color: var(--text-secondary);
   line-height: 1.5;
   flex: 1;
   font-family: 'Outfit', sans-serif;
@@ -188,32 +187,39 @@
   padding: 32px;
 }
 
-/* ===== INPUT AREA ===== */
+/* ===== INPUT AREA (FLOTTANTE) ===== */
 .input-area {
-  padding: 16px 20px 28px;
-  background: linear-gradient(180deg, transparent, rgba(15, 20, 25, 0.85));
   flex-shrink: 0;
+  padding: 20px 24px 32px;
+  background: transparent; /* ✅ Transparent pour effet flottant */
+  position: relative;
 }
 
 .input-wrapper {
   display: flex;
   align-items: flex-end;
-  gap: 10px;
-  background: rgba(42, 42, 62, 0.65);
-  border: 1px solid rgba(167, 139, 250, 0.2);
-  border-radius: 24px;
-  padding: 10px 14px;
+  gap: 12px;
+  max-width: 900px; /* ✅ Réduit pour plus d'élégance */
+  margin: 0 auto;
+  background: var(--bg-card2);
+  border: 1px solid var(--border-primary);
+  border-radius: 24px; /* ✅ Plus arrondi */
+  padding: 12px 16px;
   transition: all 0.3s ease;
+  box-shadow: var(--shadow-lg); /* ✅ Ombre pour effet flottant */
 }
 
 .input-wrapper:focus-within {
-  border-color: rgba(167, 139, 250, 0.5);
-  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.08);
+  border-color: var(--accent-primary);
+  box-shadow: 0 8px 32px rgba(139, 92, 246, 0.25); /* ✅ Ombre plus prononcée au focus */
+  transform: translateY(-2px); /* ✅ Léger lift au focus */
 }
 
 .attach-btn {
-  color: #94a3b8 !important;
-  opacity: 0.4;
+  color: var(--text-tertiary) !important;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
 }
 
 /* ===== CRÉATION EN COURS ===== */
@@ -234,22 +240,23 @@
 
 textarea {
   flex: 1;
-  background: transparent;
   border: none;
   outline: none;
-  color: #f1f5f9;
-  font-size: 15px;
-  font-family: 'Outfit', sans-serif;
   resize: none;
-  min-height: 24px;
-  max-height: 120px;
-  height: 24px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
   line-height: 1.6;
-  padding: 2px 0;
+  padding: 8px 12px;
+  max-height: 120px;
   overflow-y: auto;
+  background: transparent;
+  color: var(--text-primary);
 }
 
-textarea::placeholder { color: #475569; }
+textarea::placeholder { 
+  /* color: #475569;  */
+  color: var(--text-muted);
+}
 textarea::-webkit-scrollbar { width: 3px; }
 textarea::-webkit-scrollbar-thumb {
   background: rgba(167, 139, 250, 0.3);
@@ -258,20 +265,26 @@ textarea::-webkit-scrollbar-thumb {
 textarea:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .send-btn {
-  background: linear-gradient(135deg, #8b5cf6, #a78bfa) !important;
-  color: white !important;
-  width: 38px !important;
-  height: 38px !important;
-  border-radius: 50% !important;
   flex-shrink: 0;
-  transition: all 0.3s ease !important;
+  width: 40px;
+  height: 40px;
+  min-width: 40px !important;
+  padding: 0 !important;
+  border-radius: 50% !important; /* ✅ Bouton rond */
+  background: var(--accent-gradient) !important;
+  color: white !important;
+  transition: all 0.2s ease;
 }
-.send-btn:not(:disabled):hover {
+send-btn:not(:disabled):hover {
   transform: scale(1.1);
   box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
 }
 .send-btn:disabled { 
   opacity: 0.35; 
+}
+
+.send-btn mat-icon {
+  font-size: 20px;
 }
 
 /* ===== FILE PREVIEW ===== */
@@ -316,19 +329,20 @@ textarea:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* Attach button enabled */
 .attach-btn:not(:disabled) {
-  color: #a78bfa !important;
-  opacity: 1;
+  color: var(--accent-primary) !important;
 }
 
 .attach-btn:not(:disabled):hover {
-  background: rgba(167, 139, 250, 0.1) !important;
+  background: rgba(167, 139, 250, 0.15) !important;
+  border-radius: 50%;
 }
 
 /* Scrollbar messages */
 .messages-container::-webkit-scrollbar { width: 5px; }
 .messages-container::-webkit-scrollbar-track { background: transparent; }
 .messages-container::-webkit-scrollbar-thumb {
-  background: rgba(167, 139, 250, 0.25);
+  /* background: rgba(167, 139, 250, 0.25); */
+  background: var(--accent-primary);
   border-radius: 10px;
 }
 
@@ -348,4 +362,29 @@ textarea:disabled { opacity: 0.5; cursor: not-allowed; }
     grid-template-columns: 1fr;
   }
   .bot-welcome h2 { font-size: 22px; }
+}
+
+/* ===== RESPONSIVE INPUT ===== */
+@media (max-width: 768px) {
+  .input-area {
+    padding: 16px 16px 24px;
+  }
+
+  .input-wrapper {
+    max-width: 100%;
+    border-radius: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .input-wrapper {
+    padding: 10px 12px;
+  }
+
+  .send-btn,
+  .attach-btn {
+    width: 36px;
+    height: 36px;
+    min-width: 36px !important;
+  }
 }

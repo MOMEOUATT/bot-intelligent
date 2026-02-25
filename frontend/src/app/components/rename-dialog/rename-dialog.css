@@ -1,5 +1,6 @@
 .dialog-container {
-    background: linear-gradient(145deg, #1e1e2e 0%, #16161f 100%);
+    /* background: linear-gradient(145deg, #1e1e2e 0%, #16161f 100%); */
+    background: var(--bg-primary);
     border-radius: 16px;
     overflow: hidden;
 }
@@ -7,8 +8,9 @@
 .dialog-header {
     text-align: center;
     padding: 32px 32px 24px;
-    background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(167, 139, 250, 0.05));
-    border-bottom: 1px solid rgba(167, 139, 250, 0.15);
+    /* background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(167, 139, 250, 0.05)); */
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border-primary);
 }
 
 .edit-icon {
@@ -22,13 +24,15 @@
 .dialog-header h2 {
     font-size: 24px;
     font-weight: 600;
-    color: #f1f5f9;
+    /* color: #f1f5f9; */
+    color: var(--text-primary);
     margin: 0 0 8px;
 }
 
 .subtitle {
     font-size: 14px;
-    color: #94a3b8;
+    /* color: #94a3b8; */
+    color: var(--text-secondary);
     margin: 0;
 }
 
@@ -87,7 +91,8 @@
 }
 
 .cancel-btn {
-    color: #94a3b8 !important;
+    color: #bd3b32 !important;
+    background: #f08c8c;
 }
 
 .confirm-btn {
