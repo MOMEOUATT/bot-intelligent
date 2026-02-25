@@ -1,0 +1,118 @@
+<div class="dashboard-container">
+
+  <!-- Header -->
+  <div class="dashboard-header">
+    <div class="header-content">
+      <button mat-icon-button class="back-btn" (click)="goToChat()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div>
+        <h1>Tableau de bord</h1>
+        <p>Visualisez votre activité sur Lumin</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-state">
+    <mat-spinner diameter="48"></mat-spinner>
+    <p>Chargement des statistiques...</p>
+  </div>
+
+  <!-- Content -->
+  <div *ngIf="!loading && stats" class="dashboard-content">
+
+    <!-- KPI Cards -->
+    <div class="kpi-grid">
+      <app-stat-card
+        icon="forum"
+        [value]="stats.totalConversations"
+        label="Conversations"
+        iconBackground="linear-gradient(135deg, #8b5cf6, #a78bfa)">
+      </app-stat-card>
+
+      <app-stat-card
+        icon="chat"
+        [value]="stats.totalMessages"
+        label="Messages"
+        iconBackground="linear-gradient(135deg, #3b82f6, #60a5fa)">
+      </app-stat-card>
+
+      <app-stat-card
+        icon="thumb_up"
+        [value]="stats.likedMessages"
+        label="Réponses utiles"
+        iconBackground="linear-gradient(135deg, #10b981, #34d399)">
+      </app-stat-card>
+
+      <app-stat-card
+        icon="thumb_down"
+        [value]="stats.dislikedMessages"
+        label="Réponses à améliorer"
+        iconBackground="linear-gradient(135deg, #ef4444, #f87171)">
+      </app-stat-card>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="charts-grid">
+      
+      <!-- ✅ Messages chart avec sélecteur de période -->
+      <div class="chart-container full-width">
+        <!-- Boutons de période -->
+        <div class="period-selector">
+          <button 
+            *ngFor="let period of availablePeriods"
+            mat-button
+            [class.active]="selectedDays === period.value"
+            (click)="onPeriodChange(period.value)">
+            {{ period.label }}
+          </button>
+        </div>
+
+        <app-messages-chart 
+          [dailyStats]="stats.dailyStats"
+          [subtitle]="selectedDays + ' derniers jours'">
+        </app-messages-chart>
+      </div>
+
+      <!-- Feedback chart + Recent conversations -->
+      <div class="chart-container">
+        <app-feedback-chart
+          [totalMessages]="stats.totalMessages"
+          [likedMessages]="stats.likedMessages"
+          [dislikedMessages]="stats.dislikedMessages">
+        </app-feedback-chart>
+      </div>
+
+      <div class="chart-container">
+        <mat-card class="recent-card">
+          <mat-card-header>
+            <h3>Conversations récentes</h3>
+            <p>Vos 5 dernières discussions</p>
+          </mat-card-header>
+          <mat-card-content>
+            <div *ngIf="recentConversations.length === 0" class="empty-state">
+              <mat-icon>chat_bubble_outline</mat-icon>
+              <p>Aucune conversation</p>
+            </div>
+            <div *ngIf="recentConversations.length > 0" class="conversations-list">
+              <div 
+                *ngFor="let conv of recentConversations"
+                class="conversation-item"
+                (click)="goToConversation(conv.id)">
+                <mat-icon>chat_bubble</mat-icon>
+                <div class="conv-info">
+                  <h4>{{ conv.title }}</h4>
+                  <p>{{ formatDate(conv.updatedAt) }}</p>
+                </div>
+                <mat-icon class="arrow">chevron_right</mat-icon>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+  </div>
+
+</div>

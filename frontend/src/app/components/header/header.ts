@@ -72,4 +72,7 @@ export class Header implements OnInit {
       window.location.href = '/auth';
     }, 100);
   }
+  onDashboard(): void {
+    this.router.navigate(['/dashboard']);
+  }
 }

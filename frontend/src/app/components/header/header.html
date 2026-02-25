@@ -26,6 +26,11 @@
         <span>{{ currentUser?.email }}</span>
       </div>
       <mat-divider></mat-divider>
+
+      <button mat-menu-item (click)="onDashboard()">
+        <mat-icon>dashboard</mat-icon>
+        <span>Tableau de bord</span>
+      </button>
       
       <!-- ✅ NOUVEAU : Lien vers le profil -->
       <button mat-menu-item (click)="onProfile()">

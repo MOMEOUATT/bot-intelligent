@@ -4,6 +4,7 @@ import { MainLayout } from './layouts/main-layout/main-layout';
 import { Chat } from './components/chat/chat';
 import { authGuard, noAuthGuard } from './guards/auth-guard';
 import { UserProfile } from './components/user-profile/user-profile';
+import { DashboardComponent } from './components/dashboard/dashboard';
 
 export const routes: Routes = [
     {
@@ -30,6 +31,10 @@ export const routes: Routes = [
     },{
         path: "profile",
         component: UserProfile,
+        canActivate: [authGuard]
+    },{
+        path: "dashboard",
+        component: DashboardComponent,
         canActivate: [authGuard]
     },{
         path: "**",
