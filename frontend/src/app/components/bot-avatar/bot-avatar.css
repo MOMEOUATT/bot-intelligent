@@ -1,0 +1,64 @@
+.bot-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.bot-svg {
+  width: 120px;
+  height: 140px;
+  color: #a78bfa;
+  filter: drop-shadow(0 4px 12px rgba(167, 139, 250, 0.3));
+  
+  .bot-head,
+  .bot-body,
+  .arm-left,
+  .arm-right {
+    transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+  }
+  
+  .eyes {
+    transition: all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
+    
+    ellipse {
+      transition: all 0.3s ease-in-out;
+    }
+  }
+  
+  .eye-shine {
+    animation: shine 2s ease-in-out infinite;
+  }
+  
+  .mouth {
+    animation: smile 3s ease-in-out infinite;
+  }
+}
+
+
+.bot-svg:hover {
+  transform: translateY(-2px);
+  
+  .bot-head {
+    transform: rotate(2deg);
+    transform-origin: center bottom;
+  }
+}
+
+@keyframes shine {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes smile {
+  0%, 100% {
+    d: path('M 70 95 Q 100 105 130 95');
+  }
+  50% {
+    d: path('M 70 95 Q 100 107 130 95');
+  }
+}

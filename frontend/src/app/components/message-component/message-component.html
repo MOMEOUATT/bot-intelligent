@@ -1,0 +1,64 @@
+<div class="message" [class.user-message]="!message.isBot" [class.bot-message]="message.isBot">
+  
+  <!-- Avatar Bot -->
+  <div class="message-avatar" *ngIf="message.isBot">
+    <app-bot-avatar></app-bot-avatar>
+  </div>
+
+  <!-- Contenu message -->
+  <div class="message-content">
+    <div class="message-bubble">
+      
+      <!-- ✅ Image si présente -->
+      <div class="message-image" *ngIf="message.fileUrl">
+        <img 
+          [src]="getImageUrl(message.fileUrl)" 
+          [alt]="message.fileName || 'Image'"
+          (click)="onImageClick(message.fileUrl)">
+      </div>
+
+      <!-- Texte -->
+      <p *ngIf="message.content">{{ message.content }}</p>
+    </div>
+
+    <!-- Feedback buttons -->
+    <div class="message-actions" *ngIf="message.isBot">
+      <button 
+        mat-icon-button 
+        class="feedback-btn"
+        [class.liked]="message.liked"
+        (click)="onLike()"
+        [disabled]="isProcessing"
+        matTooltip="Utile">
+        <mat-icon>thumb_up</mat-icon>
+      </button>
+
+      <button 
+        mat-icon-button 
+        class="feedback-btn"
+        [class.disliked]="message.disliked"
+        (click)="onDislike()"
+        [disabled]="isProcessing"
+        matTooltip="Pas utile">
+        <mat-icon>thumb_down</mat-icon>
+      </button>
+
+      <button 
+        mat-icon-button 
+        class="feedback-btn copy-btn"
+        (click)="onCopy()"
+        [disabled]="isProcessing"
+        matTooltip="Copier">
+        <mat-icon>{{ copied ? 'check' : 'content_copy' }}</mat-icon>
+      </button>
+    </div>
+
+    <span class="message-time">{{ formatTime(message.createdAt) }}</span>
+  </div>
+
+  <!-- Avatar User -->
+  <div class="message-avatar" *ngIf="!message.isBot">
+    <div class="user-avatar">{{ getUserInitial() }}</div>
+  </div>
+
+</div>

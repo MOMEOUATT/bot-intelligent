@@ -1,0 +1,225 @@
+/* ===== IMPORTS ===== */
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+/* ===== CSS VARIABLES ===== */
+:root {
+  /* Variables communes */
+  --transition-speed: 0.3s;
+}
+
+/* ===== THÈME SOMBRE (par défaut) ===== */
+body.dark-theme {
+  /* Backgrounds */
+  --bg-primary: #0c0e14;
+  --bg-secondary: #1a1f2e;
+  --bg-tertiary: #2a2a3e;
+  --bg-card: rgba(26, 31, 46, 0.8);
+  --bg-card2: rgba(26, 31, 46, 0.8);
+  --bg-hover: rgba(42, 42, 62, 0.6);
+  
+  /* Text */
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-tertiary: #94a3b8;
+  --text-muted: #64748b;
+  
+  /* Borders */
+  --border-primary: rgba(167, 139, 250, 0.15);
+  --border-secondary: rgba(167, 139, 250, 0.25);
+  
+  /* Accent colors */
+  --accent-primary: #a78bfa;
+  --accent-secondary: #8b5cf6;
+  --accent-gradient: linear-gradient(135deg, #8b5cf6, #a78bfa);
+  
+  /* Status colors */
+  --success: #10b981;
+  --error: #ef4444;
+  --warning: #f59e0b;
+  --info: #3b82f6;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+/* ===== THÈME CLAIR SOFT (PASTEL) ===== */
+body.light-theme {
+  /* Backgrounds - tons pastel */
+  --bg-primary: #fefefed5;
+  --bg-secondary: #f9fafbc2;
+  --bg-tertiary: #f3f4f6be;
+  /* --bg-card: rgba(255, 255, 255, 0.76); */
+  --bg-card: rgb(238, 233, 233);
+  --bg-card2: rgba(255, 255, 255, 0.76);
+  --bg-hover: rgba(249, 250, 251, 0.753);
+  
+  /* Text - contrastes adoucis */
+  --text-primary: #1f2937;
+  --text-secondary: #4b5563;
+  --text-tertiary: #6b7280;
+  --text-muted: #9ca3af;
+  
+  /* Borders - très subtiles */
+  --border-primary: rgba(229, 231, 235, 0.6);
+  --border-secondary: rgba(209, 213, 219, 0.5);
+  
+  /* Accent colors - versions pastel */
+  --accent-primary: #9f7aea;
+  --accent-secondary: #805ad5;
+  --accent-gradient: linear-gradient(135deg, #9f7aea, #b794f4);
+  
+  /* Status colors - versions pastel */
+  --success: #10b981;
+  --error: #f87171;
+  --warning: #fbbf24;
+  --info: #60a5fa;
+  
+  /* Shadows - très légères */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* ✅ Améliorer les bulles de message en mode clair */
+body.light-theme .bot-message .message-bubble {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(249, 250, 251, 0.98));
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+/* ✅ Améliorer la sidebar en mode clair */
+body.light-theme .sidebar {
+  background: rgba(255, 255, 255, 0.808);
+  backdrop-filter: blur(10px);
+  box-shadow: 2px 0 16px rgba(0, 0, 0, 0.04);
+}
+
+body.light-theme .conversation-item {
+  background: transparent;
+}
+
+body.light-theme .conversation-item:hover {
+  background: rgba(249, 250, 251, 0.774);
+}
+
+body.light-theme .conversation-item.active {
+  background: linear-gradient(135deg, rgba(159, 122, 234, 0.08), rgba(183, 148, 244, 0.08));
+}
+
+/* ✅ Améliorer le header en mode clair */
+body.light-theme .header {
+  background: rgba(255, 255, 255, 0.808);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.04);
+}
+
+body.light-theme .user-chip {
+  background: linear-gradient(135deg, rgba(249, 250, 251, 0.95), rgba(243, 244, 246, 0.95));
+}
+
+/* ===== BASE STYLES ===== */
+html, body {
+  height: 100%;
+  overflow: auto;
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color var(--transition-speed), 
+              color var(--transition-speed);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+app-root {
+  display: block;
+  height: 100%;
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent-primary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-secondary);
+}
+
+/* ===== MATERIAL OVERRIDES ===== */
+.mat-mdc-dialog-container .mdc-dialog__surface {
+  background: var(--bg-card) !important;
+}
+
+.mat-mdc-card {
+  background: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+}
+
+.mat-mdc-form-field {
+  color: var(--text-primary) !important;
+}
+
+.mat-mdc-input-element {
+  color: var(--text-primary) !important;
+}
+
+/* ===== TOASTS / SNACKBAR ===== */
+.custom-snackbar {
+  font-family: 'Outfit', sans-serif !important;
+  font-size: 14px !important;
+  border-radius: 12px !important;
+  box-shadow: var(--shadow-lg) !important;
+}
+
+.custom-snackbar .mdc-snackbar__surface {
+  border-radius: 12px !important;
+  padding: 0 !important;
+}
+
+.custom-snackbar .mat-mdc-snack-bar-label {
+  padding: 14px 16px !important;
+  color: white !important;
+}
+
+.custom-snackbar .mat-mdc-button {
+  color: white !important;
+  min-width: 40px !important;
+  padding: 0 8px !important;
+}
+
+/* Success (vert) */
+.success-toast .mdc-snackbar__surface {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+}
+
+/* Error (rouge) */
+.error-toast .mdc-snackbar__surface {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+}
+
+/* Info (bleu) */
+.info-toast .mdc-snackbar__surface {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+}
+
+/* Warning (orange) */
+.warning-toast .mdc-snackbar__surface {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+}

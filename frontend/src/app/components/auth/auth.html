@@ -1,0 +1,174 @@
+<div class="auth-container">
+    <div class="auth-card" [class.flip]="isSignup">
+        
+        <!-- FACE AVANT : LOGIN -->
+        <div class="auth-face auth-front">
+            <div class="auth-content">
+                 <app-bot-avatar [eyeState]="getEyeState()"></app-bot-avatar>
+                <h1 class="auth-title">Lumin</h1>
+                <p class="auth-subtitle">Votre assistant personnel, toujours lumineux</p>
+
+                <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="auth-form">
+                <mat-form-field class="full-width">
+                    <mat-label>Email</mat-label>
+                    <input matInput 
+                        type="email" 
+                        formControlName="email"
+                        placeholder="Adresse Email">
+                    <mat-icon matPrefix>email</mat-icon>
+                    <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
+                    L'email est requis
+                    </mat-error>
+                    <mat-error *ngIf="loginForm.get('email')?.hasError('email')">
+                    Email invalide
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="full-width">
+                    <mat-label>Mot de passe</mat-label>
+                    <input matInput 
+                        [type]="hidePassword ? 'password' : 'text'"
+                        formControlName="password"
+                        placeholder="Mot de passe"
+                        (focus)="isPasswordFocused = true"
+                        (blur)="isPasswordFocused = false">
+                    <mat-icon matPrefix>lock</mat-icon>
+                    <button mat-icon-button 
+                            matSuffix 
+                            type="button"
+                            (click)="hidePassword = !hidePassword">
+                    <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
+                    <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
+                    Le mot de passe est requis
+                    </mat-error>
+                </mat-form-field>
+
+                <button matButton = "filled"
+                        color="primary" 
+                        type="submit"
+                        class="auth-button"
+                        [disabled]="loginForm.invalid || loading">
+                    <mat-spinner *ngIf="loading" diameter="20" class="button-spinner"></mat-spinner>
+                    <span *ngIf="!loading">Se connecter</span>
+                </button>
+
+                <div class="auth-footer">
+                    <p>Pas encore de compte ?</p>
+                    <button mat-button 
+                            type="button"
+                            color="accent"
+                            (click)="toggleMode()">
+                    Créer un compte
+                    </button>
+                </div>
+
+                <div *ngIf="errorMessage" class="error-message">
+                    <mat-icon>error</mat-icon>
+                    {{ errorMessage }}
+                </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- FACE ARRIÈRE : SIGNUP -->
+        <div class="auth-face auth-back">
+            <div class="auth-content">
+                <app-bot-avatar [eyeState]="getEyeState()"></app-bot-avatar>
+                <h1 class="auth-title">Créer un compte</h1>
+                <p class="auth-subtitle">Rejoignez Lumin</p>
+
+                <form [formGroup]="signupForm" (ngSubmit)="onSignup()" class="auth-form">
+                <mat-form-field class="full-width">
+                    <mat-label>Email</mat-label>
+                    <input matInput
+                            type="email" 
+                            formControlName="email"
+                            placeholder="Adresse Email">
+                    <mat-icon matPrefix>email</mat-icon>
+                    <mat-error *ngIf="signupForm.get('email')?.hasError('required')">
+                    L'email est requis
+                    </mat-error>
+                    <mat-error *ngIf="signupForm.get('email')?.hasError('email')">
+                    Email invalide
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="full-width">
+                    <mat-label>Nom d'utilisateur</mat-label>
+                    <input matInput 
+                        formControlName="username"
+                        placeholder="Nom d'utilisateur">
+                    <mat-icon matPrefix>person</mat-icon>
+                    <mat-error *ngIf="signupForm.get('username')?.hasError('required')">
+                    Le nom d'utilisateur est requis
+                    </mat-error>
+                    <mat-error *ngIf="signupForm.get('username')?.hasError('minlength')">
+                    Minimum 3 caractères
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="full-width">
+                    <mat-label>Mot de passe</mat-label>
+                    <input matInput 
+                        [type]="hidePasswordSignup ? 'password' : 'text'"
+                        formControlName="password"
+                        placeholder="Mot de passe"
+                        (focus)="isPasswordFocused = true"
+                        (blur)="isPasswordFocused = false">
+                    <mat-icon matPrefix>lock</mat-icon>
+                    <button mat-icon-button 
+                            matSuffix 
+                            type="button"
+                            (click)="hidePasswordSignup = !hidePasswordSignup">
+                    <mat-icon>{{hidePasswordSignup ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
+                    <mat-error *ngIf="signupForm.get('password')?.hasError('required')">
+                    Le mot de passe est requis
+                    </mat-error>
+                    <mat-error *ngIf="signupForm.get('password')?.hasError('minlength')">
+                    Minimum 6 caractères
+                    </mat-error>
+                </mat-form-field>
+
+                <button matButton = "filled"
+                        color="primary" 
+                        type="submit"
+                        class="auth-button"
+                        [disabled]="signupForm.invalid || loading">
+                    <mat-spinner *ngIf="loading" diameter="20" class="button-spinner"></mat-spinner>
+                    <span *ngIf="!loading">S'inscrire</span>
+                </button>
+
+                <div class="auth-footer">
+                    <p>Déjà un compte ?</p>
+                    <button mat-button 
+                            type="button"
+                            color="accent"
+                            (click)="toggleMode()">
+                    Se connecter
+                    </button>
+                </div>
+
+                <div *ngIf="errorMessage" class="error-message">
+                    <mat-icon>error</mat-icon>
+                    {{ errorMessage }}
+                </div>
+
+                <div *ngIf="successMessage" class="success-message">
+                    <mat-icon>check_circle</mat-icon>
+                    {{ successMessage }}
+                </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- BACKGROUND DECORATIF -->
+    <div class="background-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+</div>

@@ -1,0 +1,28 @@
+<mat-card class="chart-card">
+    <mat-card-header>
+        <h3>Répartition feedback</h3>
+        <p>Satisfaction globale</p>
+    </mat-card-header>
+    <mat-card-content>
+        <canvas 
+            baseChart
+            [data]="chartData"
+            [options]="chartOptions"
+            [type]="'doughnut'">
+        </canvas>
+        <div class="legend">
+            <div class="legend-item">
+                <span class="dot liked"></span>
+                <span>Utiles: {{ likedMessages }} ({{ likedPercent }}%)</span>
+            </div>
+            <div class="legend-item">
+                <span class="dot disliked"></span>
+                <span>Pas utiles: {{ dislikedMessages }} ({{ dislikedPercent }}%)</span>
+            </div>
+            <div class="legend-item">
+                <span class="dot neutral"></span>
+                <span>Sans avis: {{ neutralMessages }} ({{ neutralPercent }}%)</span>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>

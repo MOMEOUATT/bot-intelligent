@@ -1,0 +1,307 @@
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+}
+
+/* Conteneur plein écran scrollable */
+.auth-container {
+  min-height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  position: relative;
+  overflow: visible;
+}
+
+/* Carte principale */
+.auth-card {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  z-index: 1;
+  /* ✅ Pas de height fixe, pas de perspective bloquante */
+}
+
+/* Les deux faces */
+.auth-face {
+  width: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transition: transform 0.65s cubic-bezier(0.4, 0.0, 0.2, 1);
+  background: linear-gradient(145deg, #2a2a3e 0%, #1f1f2e 100%);
+  border-radius: 24px;
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(167, 139, 250, 0.1);
+  border: 1px solid rgba(167, 139, 250, 0.15);
+  overflow: visible;
+  position: relative;
+}
+
+/* Barre décorative top */
+.auth-face::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  border-radius: 24px 24px 0 0;
+  background: linear-gradient(90deg, transparent, rgba(167, 139, 250, 0.6), transparent);
+}
+
+/* Face avant : visible par défaut */
+.auth-front {
+  transform: rotateY(0deg);
+  position: relative;
+}
+
+/* Face arrière : cachée derrière */
+.auth-back {
+  transform: rotateY(180deg);
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  pointer-events: none;
+}
+
+/* Flip : front disparaît */
+.auth-card.flip .auth-front {
+  transform: rotateY(-180deg);
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  pointer-events: none;
+}
+
+/* Flip : back apparaît */
+.auth-card.flip .auth-back {
+  transform: rotateY(0deg);
+  position: relative;
+  pointer-events: all;
+}
+
+/* Contenu interne */
+.auth-content {
+  padding: 36px 40px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.auth-title {
+  font-size: 34px;
+  font-weight: 700;
+  color: #c4b5fd;
+  margin: 16px 0 6px;
+  text-align: center;
+  letter-spacing: 1px;
+  text-shadow: 0 0 20px rgba(167, 139, 250, 0.4);
+}
+
+.auth-subtitle {
+  font-size: 15px;
+  color: #94a3b8;
+  margin-bottom: 28px;
+  text-align: center;
+}
+
+/* ✅ Formulaire — inputs à taille normale */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.full-width {
+  width: 100%;
+}
+
+/* ✅ Override Material pour dark theme */
+.full-width ::ng-deep .mat-mdc-text-field-wrapper {
+  background-color: rgba(255, 255, 255, 0.07) !important;
+  border-radius: 12px !important;
+}
+
+.full-width ::ng-deep .mat-mdc-form-field-flex {
+  height: 56px !important; /* ✅ Hauteur explicite */
+}
+
+.full-width ::ng-deep .mat-mdc-form-field-infix {
+  padding-top: 16px !important;
+  padding-bottom: 8px !important;
+  min-height: 56px !important;
+}
+
+.full-width ::ng-deep .mdc-text-field--outlined .mdc-notched-outline__leading,
+.full-width ::ng-deep .mdc-text-field--outlined .mdc-notched-outline__notch,
+.full-width ::ng-deep .mdc-text-field--outlined .mdc-notched-outline__trailing {
+  border-color: rgba(167, 139, 250, 0.25) !important;
+}
+
+.full-width ::ng-deep .mdc-text-field--outlined:hover .mdc-notched-outline__leading,
+.full-width ::ng-deep .mdc-text-field--outlined:hover .mdc-notched-outline__notch,
+.full-width ::ng-deep .mdc-text-field--outlined:hover .mdc-notched-outline__trailing {
+  border-color: rgba(167, 139, 250, 0.5) !important;
+}
+
+.full-width ::ng-deep .mdc-text-field--focused .mdc-notched-outline__leading,
+.full-width ::ng-deep .mdc-text-field--focused .mdc-notched-outline__notch,
+.full-width ::ng-deep .mdc-text-field--focused .mdc-notched-outline__trailing {
+  border-color: #a78bfa !important;
+  border-width: 2px !important;
+}
+
+.full-width ::ng-deep .mat-mdc-input-element {
+  color: #e2e8f0 !important;
+  font-size: 15px !important;
+}
+
+.full-width ::ng-deep .mat-mdc-floating-label {
+  color: #94a3b8 !important;
+}
+
+.full-width ::ng-deep .mat-mdc-form-field-icon-prefix mat-icon,
+.full-width ::ng-deep .mat-mdc-form-field-icon-suffix mat-icon {
+  color: #a78bfa !important;
+}
+
+.full-width ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+  display: none; /* Cache les messages d'erreur sous le champ pour économiser espace */
+}
+
+/* Bouton principal */
+.auth-button {
+  width: 100%;
+  height: 52px;
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 4px;
+  background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%) !important;
+  color: white !important;
+  border-radius: 14px !important;
+  box-shadow: 0 4px 16px rgba(139, 92, 246, 0.4);
+  transition: all 0.3s ease !important;
+  border: none;
+  cursor: pointer;
+  position: relative;
+}
+
+.auth-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.55);
+}
+
+.auth-button:disabled {
+  opacity: 0.55;
+}
+
+.button-spinner {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.button-spinner ::ng-deep circle {
+  stroke: white !important;
+}
+
+/* Footer lien */
+.auth-footer {
+  margin-top: 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.auth-footer p {
+  color: #94a3b8;
+  font-size: 14px;
+  margin: 0;
+}
+
+.auth-footer button {
+  color: #a78bfa !important;
+  font-weight: 600;
+}
+
+.auth-footer button:hover {
+  background: rgba(167, 139, 250, 0.1) !important;
+}
+
+/* Messages erreur/succès */
+.error-message,
+.success-message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  margin-top: 12px;
+}
+
+.error-message {
+  background: rgba(239, 68, 68, 0.1);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.success-message {
+  background: rgba(34, 197, 94, 0.1);
+  color: #86efac;
+  border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+/* Formes décoratives background */
+.background-shapes {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.shape {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  animation: floatShape 20s ease-in-out infinite;
+}
+
+.shape-1 {
+  width: 500px; height: 500px;
+  top: -200px; left: -200px;
+  background: radial-gradient(circle, rgba(167, 139, 250, 0.12), transparent 70%);
+  animation-delay: 0s;
+}
+
+.shape-2 {
+  width: 600px; height: 600px;
+  bottom: -250px; right: -250px;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.12), transparent 70%);
+  animation-delay: 7s;
+}
+
+.shape-3 {
+  width: 350px; height: 350px;
+  top: 40%; right: -100px;
+  background: radial-gradient(circle, rgba(196, 181, 253, 0.08), transparent 70%);
+  animation-delay: 14s;
+}
+
+@keyframes floatShape {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(30px, -30px) scale(1.1); }
+  66%       { transform: translate(-20px, 20px) scale(0.9); }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .auth-content { padding: 28px 24px 32px; }
+  .auth-title { font-size: 28px; }
+  .auth-container { padding: 20px 16px; align-items: flex-start; }
+}
